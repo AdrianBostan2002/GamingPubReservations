@@ -1,6 +1,5 @@
 ﻿namespace DataAccessLayer.Entities
 {
-
     public class Customer
     {
         public int Id { get; set; }

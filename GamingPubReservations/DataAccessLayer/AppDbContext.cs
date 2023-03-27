@@ -4,8 +4,8 @@ using DataAccessLayer.Enums;
 namespace DataAccessLayer
 {
     public static class AppDbContext
-        {
-            public static List<Customer> Customers = new List<Customer>
+    {
+        public static List<Customer> Customers = new List<Customer>
         {
             new Customer(1, "Sebi"),
             new Customer(2, "Adi"),
@@ -19,7 +19,7 @@ namespace DataAccessLayer
             new Customer(10, "Alex")
         };
 
-            public static List<GamingPub> GamingPubs = new List<GamingPub>
+        public static List<GamingPub> GamingPubs = new List<GamingPub>
         {
             new GamingPub()
             {
@@ -65,10 +65,10 @@ namespace DataAccessLayer
             }
         };
 
-            public static List<Reservation> Reservations = new List<Reservation>(
-                                                         from pub in GamingPubs
-                                                         where pub != null
-                                                         from reservation in pub.Reservations
-                                                         select reservation);
-        }
+        public static List<Reservation> Reservations = new List<Reservation>(
+                                                     from pub in GamingPubs
+                                                     where pub != null
+                                                     from reservation in pub.Reservations
+                                                     select reservation);
+    }
 }
