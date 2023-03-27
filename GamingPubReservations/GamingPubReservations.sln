@@ -5,6 +5,10 @@ VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamingPubReservations", "GamingPubReservations\GamingPubReservations.csproj", "{4E4A9F1B-9AFB-4573-9A49-F836CAA95C44}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{C419EDAF-7E71-4D13-9DA4-1C7B940AC0F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{EEFE9101-15D4-471B-9473-D31A5635FBAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{4E4A9F1B-9AFB-4573-9A49-F836CAA95C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E4A9F1B-9AFB-4573-9A49-F836CAA95C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E4A9F1B-9AFB-4573-9A49-F836CAA95C44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C419EDAF-7E71-4D13-9DA4-1C7B940AC0F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C419EDAF-7E71-4D13-9DA4-1C7B940AC0F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C419EDAF-7E71-4D13-9DA4-1C7B940AC0F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C419EDAF-7E71-4D13-9DA4-1C7B940AC0F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEFE9101-15D4-471B-9473-D31A5635FBAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEFE9101-15D4-471B-9473-D31A5635FBAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEFE9101-15D4-471B-9473-D31A5635FBAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEFE9101-15D4-471B-9473-D31A5635FBAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
