@@ -51,6 +51,7 @@ namespace BusinessLayer.Services
             if (!string.IsNullOrEmpty(customer.Name))
             {
                 var foundCustomer = customersRepository.GetCustomerById(customer.Id);
+
                 if (foundCustomer != null)
                 {
                     foundCustomer.Name = customer.Name;
@@ -58,6 +59,13 @@ namespace BusinessLayer.Services
                 }
             }
             return false;
+        }
+
+        public Customer GetCustomerById(int id)
+        {
+            var foundCustomer = customersRepository.GetCustomerById(id);
+
+            return foundCustomer;
         }
     }
 }

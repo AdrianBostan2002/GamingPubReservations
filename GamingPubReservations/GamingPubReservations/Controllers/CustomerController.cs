@@ -23,10 +23,22 @@ namespace GamingPubReservations.Controllers
             return Ok(customers);
         }
 
+        [HttpGet("customer_by_id/{id}")]
+        public ActionResult<Customer> GetCustomerById(int id)
+        {
+            var foundCustomer = _customerService.GetCustomerById(id);
+
+            if (foundCustomer != null)
+            {
+                return Ok(foundCustomer);
+            }
+            return BadRequest(foundCustomer);
+        }
+
         [HttpPost("add_customer")]
         public ActionResult PostNewCustomer([FromBody] AddCustomerDto customer)
         {
-            if(_customerService.AddCustomer(customer))
+            if (_customerService.AddCustomer(customer))
             {
                 return Ok("Customer added");
             }
@@ -36,7 +48,7 @@ namespace GamingPubReservations.Controllers
         [HttpDelete("delete_customer")]
         public ActionResult DeleteCustomerById([FromBody] RemoveCustomerDto customer)
         {
-            if(_customerService.RemoveCustomerById(customer))
+            if (_customerService.RemoveCustomerById(customer))
             {
                 return Ok("Customer deleted");
             }
@@ -46,7 +58,7 @@ namespace GamingPubReservations.Controllers
         [HttpPut("update_customer_name")]
         public ActionResult PutUpdateCustomer([FromBody] UpdateCustomerDto customer)
         {
-            if(_customerService.UpdateCustomer(customer))
+            if (_customerService.UpdateCustomer(customer))
             {
                 return Ok("Customer updated");
             }
