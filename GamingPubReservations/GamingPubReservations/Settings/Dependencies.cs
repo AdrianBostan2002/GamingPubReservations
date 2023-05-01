@@ -21,11 +21,15 @@ namespace GamingPubReservations.Settings
         private static void AddServices(IServiceCollection services)
         {
             services.AddScoped<CustomerService>();
+            services.AddScoped<ReservationService>();
+            services.AddScoped<GamingPubService>();
         }
 
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<CustomersRepository>();
+            services.AddScoped<GamingPubsRepository>();
+            services.AddScoped<ReservationsRepository>();
         }
     }
 }

@@ -2,6 +2,8 @@
 {
     public class GamingPub
     {
+        private static int _autoincrementableId = 0;
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -14,6 +16,14 @@
 
         public GamingPubSchedule Schedule { get; set; }
 
-        public GamingPub() { }
+        public GamingPub(string name, string address) {
+            _autoincrementableId++;
+            Id = _autoincrementableId;
+            Name = name;
+            Address = address;
+            Reservations = new List<Reservation>();
+            GamingPlatforms = new List<GamingPlatform>();
+            Schedule = new GamingPubSchedule();
+        }
     }
 }
