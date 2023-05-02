@@ -1,6 +1,6 @@
 ﻿namespace DataAccessLayer.Entities
 {
-    public class Adress: BaseEntity
+    public class Adress : BaseEntity
     {
         public string Country { get; set; }
 
