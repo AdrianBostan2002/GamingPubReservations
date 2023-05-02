@@ -13,6 +13,8 @@ namespace DataAccessLayer.Entities
         public int ScheduleId { get; set; }
         public Schedule Schedule { get; set; }
 
+        public List<Reservation> Reservations { get; set; }
+
         public virtual ICollection<GamingPlatform> GamingPlatforms { get; set; }
 
         [DataType(DataType.PhoneNumber)]
