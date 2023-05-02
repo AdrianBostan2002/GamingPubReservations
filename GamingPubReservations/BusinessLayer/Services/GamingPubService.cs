@@ -24,7 +24,7 @@ namespace BusinessLayer.Services
             {
                 return false;
             }
-            gamingPubsRepository.AddGamingPub(new GamingPub(gamingPub.Name, gamingPub.Address));
+            //gamingPubsRepository.AddGamingPub(new GamingPub(gamingPub.Name, gamingPub.Address));
             return true;
         }
     }
