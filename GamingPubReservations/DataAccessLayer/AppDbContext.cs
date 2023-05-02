@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace DataAccessLayer
 {
@@ -7,9 +8,12 @@ namespace DataAccessLayer
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            string configurationString = ConfigurationManager.ConnectionStrings["MsSqlServerConnectionString"].ConnectionString;
+
             optionsBuilder
-                    .UseSqlServer("Server=localhost;Database=GamingPubsDatabase;User Id=Adi123;Password=123;TrustServerCertificate=True")
-                    .LogTo(Console.WriteLine);
+                .UseSqlServer(configurationString)
+                .LogTo(Console.WriteLine);
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
