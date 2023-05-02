@@ -22,11 +22,11 @@ namespace BusinessLayer.Services
         public bool AddCustomer(AddCustomerDto customer)
         {
             var customers = customersRepository.GetAll();
-            var foundUser = customers.FirstOrDefault(x => x.Name == customer.Name);
+            var foundUser = customers.FirstOrDefault(x => x.FirstName == customer.Name);
 
             if (foundUser == null)
             {
-                customersRepository.AddCustomer(new Customer(customer.Name));
+                customersRepository.AddCustomer(new Customer { FirstName = customer.Name });
                 return true;
             }
 
@@ -53,7 +53,7 @@ namespace BusinessLayer.Services
                 var foundCustomer = customersRepository.GetCustomerById(customer.Id);
                 if (foundCustomer != null)
                 {
-                    foundCustomer.Name = customer.Name;
+                    foundCustomer.FirstName = customer.Name;
                     return true;
                 }
             }
