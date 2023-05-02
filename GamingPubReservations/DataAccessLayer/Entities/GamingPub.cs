@@ -1,29 +1,21 @@
-﻿namespace DataAccessLayer.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DataAccessLayer.Entities
 {
-    public class GamingPub
+    public class GamingPub : BaseEntity
     {
-        private static int _autoincrementableId = 0;
-
-        public int Id { get; set; }
-
+        [StringLength(50)]
         public string Name { get; set; }
 
-        public string Address { get; set; }
+        public int AdressId { get; set; }
+        public Adress Adress { get; set; }
 
-        public List<Reservation> Reservations { get; set; }
+        public int ScheduleId { get; set; }
+        public Schedule Schedule { get; set; }
 
-        public List<GamingPlatform> GamingPlatforms { get; set; }
+        public virtual ICollection<GamingPlatform> GamingPlatforms { get; set; }
 
-        public GamingPubSchedule Schedule { get; set; }
-
-        public GamingPub(string name, string address) {
-            _autoincrementableId++;
-            Id = _autoincrementableId;
-            Name = name;
-            Address = address;
-            Reservations = new List<Reservation>();
-            GamingPlatforms = new List<GamingPlatform>();
-            Schedule = new GamingPubSchedule();
-        }
+        [DataType(DataType.PhoneNumber)]
+        public string PhoneNumber { get; set; }
     }
 }

@@ -2,18 +2,10 @@
 
 namespace DataAccessLayer.Entities
 {
-    public class GamingPlatform
+    public class GamingPlatform : BaseEntity
     {
         public GamingPlatformType Type { get; set; }
 
-        public bool IsAvailable { get; set; }
-
         public GamingPlatform() { }
-
-        public GamingPlatform(GamingPlatformType type, bool isAvailable)
-        {
-            Type = type;
-            IsAvailable = isAvailable;
-        }
     }
 }

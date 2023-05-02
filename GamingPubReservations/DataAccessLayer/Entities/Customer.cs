@@ -1,18 +1,19 @@
-﻿namespace DataAccessLayer.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DataAccessLayer.Entities
 {
-    public class Customer
+    public class Customer : BaseEntity
     {
-        private static int _autoincrementableId = 0;
+        public string FirstName { get; set; }
 
-        public int Id { get; set; }
+        public string LastName { get; set; }
 
-        public string Name { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
-        public Customer(string name)
-        {
-            _autoincrementableId++;
-            Id = _autoincrementableId;
-            Name = name;
-        }
+        [DataType(DataType.PhoneNumber)]
+        public string PhoneNumber { get; set; }
+
+        public int AdressId { get; set; }
+        public Adress Adress { get; set; }
     }
 }
