@@ -1,26 +1,18 @@
-﻿using DataAccessLayer.Enums;
-
-namespace DataAccessLayer.Entities
+﻿namespace DataAccessLayer.Entities
 {
-    public class Reservation
+    public class Reservation : BaseEntity
     {
-        public int Id { get; set; }
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
 
-        public Customer Customer { get; private set; }
+        public int GamingPubId { get; set; }
+        public GamingPub GamingPub { get; set; }
 
-        DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
-        DateTime EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
-        GamingPlatformType GamingPlatformType { get; set; }
-
-        public Reservation(int id, Customer customer, DateTime startDate, DateTime endDate, GamingPlatformType gamingPlatformType)
-        {
-            Id = id;
-            Customer = customer;
-            StartDate = startDate;
-            EndDate = endDate;
-            GamingPlatformType = gamingPlatformType;
-        }
+        public int GamingPlatformId { get; set; }
+        public GamingPlatform GamingPlatform { get; set; }
     }
 }

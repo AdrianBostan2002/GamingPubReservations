@@ -6,17 +6,17 @@ namespace DataAccessLayer.Repositories
     {
         public List<GamingPub> GetAll()
         {
-            return AppDbContext.GamingPubs;
+            return DbContext.GamingPubs;
         }
 
         public GamingPub GetPubByName(string name)
         {
-            return AppDbContext.GamingPubs.FirstOrDefault(x => x.Name == name);
+            return DbContext.GamingPubs.FirstOrDefault(x => x.Name == name);
         }
 
         public void AddGamingPub(GamingPub pub)
         {
-            AppDbContext.GamingPubs.Add(pub);
+            DbContext.GamingPubs.Add(pub);
         }
     }
 }

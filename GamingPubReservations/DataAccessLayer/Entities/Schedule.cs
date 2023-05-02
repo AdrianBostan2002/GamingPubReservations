@@ -1,6 +1,6 @@
 ﻿namespace DataAccessLayer.Entities
 {
-    public class Schedule : BaseEntity
+    public class Schedule: BaseEntity
     {
         public string Monday { get; set; }
 
