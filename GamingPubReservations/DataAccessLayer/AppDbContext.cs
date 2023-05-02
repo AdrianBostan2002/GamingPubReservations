@@ -1,24 +1,26 @@
 ﻿using DataAccessLayer.Entities;
-using DataAccessLayer.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
 {
-    public static class AppDbContext
+    public class AppDbContext : DbContext
     {
-        public static List<Customer> Customers = new List<Customer>
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            new Customer("Sebi"),
-            new Customer("Adi"),
-            new Customer("Andrei"),
-            new Customer("Mircea"),
-            new Customer("Ionut"),
-            new Customer("Cristian"),
-            new Customer("George"),
-            new Customer("Adelin"),
-            new Customer("Marius"),
-            new Customer( "Alex")
-        };
+            optionsBuilder
+                    .UseSqlServer("Server=localhost;Database=GamingPubsDatabase;User Id=Adi123;Password=123;")
+                    .LogTo(Console.WriteLine);
+        }
 
-        public static List<GamingPub> GamingPubs = new List<GamingPub>();
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
+
+        public DbSet<GamingPub> GamingPubs { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<GamingPlatform> GamingPlatforms { get; set; }
     }
 }

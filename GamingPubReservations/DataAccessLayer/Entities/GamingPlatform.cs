@@ -1,19 +1,14 @@
-﻿using DataAccessLayer.Enums;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DataAccessLayer.Entities
 {
-    public class GamingPlatform
+    public class GamingPlatform : BaseEntity
     {
-        public GamingPlatformType Type { get; set; }
+        [StringLength(20)]
+        public string Name { get; set; }
 
-        public bool IsAvailable { get; set; }
+        public virtual ICollection<GamingPub> GamingPubs { get; set; }
 
-        public GamingPlatform() { }
-
-        public GamingPlatform(GamingPlatformType type, bool isAvailable)
-        {
-            Type = type;
-            IsAvailable = isAvailable;
-        }
+        public List<Reservation> Reservations { get; set; }
     }
 }

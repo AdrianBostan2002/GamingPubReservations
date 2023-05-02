@@ -6,17 +6,20 @@ namespace DataAccessLayer.Repositories
     {
         public List<GamingPub> GetAll()
         {
-            return AppDbContext.GamingPubs;
+            throw new NotImplementedException();
+            //return AppDbContext.GamingPubs;
         }
 
         public GamingPub GetPubByName(string name)
         {
-            return AppDbContext.GamingPubs.FirstOrDefault(x => x.Name == name);
+            throw new NotImplementedException();
+            //return AppDbContext.GamingPubs.FirstOrDefault(x => x.Name == name);
         }
 
         public void AddGamingPub(GamingPub pub)
         {
-            AppDbContext.GamingPubs.Add(pub);
+            throw new NotImplementedException();
+            //AppDbContext.GamingPubs.Add(pub);
         }
     }
 }

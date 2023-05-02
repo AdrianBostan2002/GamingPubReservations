@@ -6,24 +6,28 @@ namespace DataAccessLayer.Repositories
     {
         public List<Customer> GetAll()
         {
-            return AppDbContext.Customers;
+            throw new NotImplementedException();
+            //return AppDbContext.Customers;
         }
 
         public void AddCustomer(Customer customer)
         {
-            AppDbContext.Customers.Add(customer);
+            throw new NotImplementedException();
+            //AppDbContext.Customers.Add(customer);
         }
 
         public void RemoveCustomer(Customer customer)
         {
-            AppDbContext.Customers.Remove(customer);
+            throw new NotImplementedException();
+            //AppDbContext.Customers.Remove(customer);
         }
 
         public Customer GetCustomerById(int id)
         {
-            var result = AppDbContext.Customers.FirstOrDefault(x => x.Id == id);
+            throw new NotImplementedException();
+            //var result = AppDbContext.Customers.FirstOrDefault(x => x.Id == id);
 
-            return result;
+            //return result;
         }
     }
 }
