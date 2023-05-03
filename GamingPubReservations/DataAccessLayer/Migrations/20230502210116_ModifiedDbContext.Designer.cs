@@ -56,7 +56,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("Adress");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.Customer", b =>
+            modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,7 +88,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("AdressId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.GamingPlatform", b =>
@@ -149,7 +149,7 @@ namespace DataAccessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
@@ -166,7 +166,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("UserId");
 
                     b.HasIndex("GamingPlatformId");
 
@@ -231,7 +231,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("GamingPlatformGamingPub");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.Customer", b =>
+            modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
                 {
                     b.HasOne("DataAccessLayer.Entities.Adress", "Adress")
                         .WithMany()
@@ -263,9 +263,9 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("DataAccessLayer.Entities.Reservation", b =>
                 {
-                    b.HasOne("DataAccessLayer.Entities.Customer", "Customer")
+                    b.HasOne("DataAccessLayer.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -281,7 +281,7 @@ namespace DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("User");
 
                     b.Navigation("GamingPlatform");
 

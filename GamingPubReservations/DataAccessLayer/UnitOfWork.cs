@@ -4,7 +4,7 @@ namespace DataAccessLayer
 {
     public class UnitOfWork
     {
-        public CustomersRepository CustomersRepository { get; }
+        public UsersRepository UsersRepository { get; }
         public GamingPubsRepository GamingPubsRepositoryGamingPubsRepository { get; }
         public ReservationsRepository ReservationsRepositoryReservationsRepository { get; }
 
@@ -13,13 +13,13 @@ namespace DataAccessLayer
         public UnitOfWork
         (
             AppDbContext dbContext,
-            CustomersRepository customersRepository,
+            UsersRepository customersRepository,
             GamingPubsRepository gamingPubsRepositoryGamingPubsRepository,
             ReservationsRepository reservationsRepositoryReservationsRepository
         )
         {
             _dbContext = dbContext;
-            CustomersRepository = customersRepository;
+            UsersRepository = customersRepository;
             GamingPubsRepositoryGamingPubsRepository = gamingPubsRepositoryGamingPubsRepository;
             ReservationsRepositoryReservationsRepository = reservationsRepositoryReservationsRepository;
         }

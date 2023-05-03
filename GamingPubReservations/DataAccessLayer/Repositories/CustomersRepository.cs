@@ -2,23 +2,23 @@
 
 namespace DataAccessLayer.Repositories
 {
-    public class CustomersRepository: RepositoryBase<Customer>
+    public class UsersRepository: RepositoryBase<User>
     {
-        public CustomersRepository(AppDbContext appDbContext) : base(appDbContext) { }
+        public UsersRepository(AppDbContext appDbContext) : base(appDbContext) { }
 
-        public void AddCustomer(Customer customer)
+        public void AddUser(User customer)
         {
-            _dbContext.Customers.Add(customer);
+            _dbContext.Users.Add(customer);
         }
 
-        public void RemoveCustomer(Customer customer)
+        public void RemoveUser(User customer)
         {
-            _dbContext.Customers.Remove(customer);
+            _dbContext.Users.Remove(customer);
         }
 
-        public Customer GetCustomerById(int id)
+        public User GetUserById(int id)
         {
-            var result = _dbContext.Customers.FirstOrDefault(x => x.Id == id);
+            var result = _dbContext.Users.FirstOrDefault(x => x.Id == id);
 
             return result;
         }

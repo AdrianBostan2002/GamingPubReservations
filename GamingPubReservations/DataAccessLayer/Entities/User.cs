@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataAccessLayer.Entities
 {
-    public class Customer : BaseEntity
+    public class User : BaseEntity
     {
         [StringLength(50)]
         public string FirstName { get; set; }

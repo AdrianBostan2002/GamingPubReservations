@@ -7,50 +7,50 @@ namespace GamingPubReservations.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private CustomerService _customerService;
+        private UserService _customerService;
 
-        public CustomerController(CustomerService customerService)
+        public UserController(UserService customerService)
         {
             _customerService = customerService;
         }
 
         [HttpGet("all_customers")]
-        public ActionResult<List<Customer>> GetAllCustomers()
+        public ActionResult<List<User>> GetAllUsers()
         {
             var customers = _customerService.GetAll();
             return Ok(customers);
         }
 
         [HttpPost("add_customer")]
-        public ActionResult PostNewCustomer([FromBody] AddCustomerDto customer)
+        public ActionResult PostNewUser([FromBody] AddUserDto customer)
         {
-            if(_customerService.AddCustomer(customer))
+            if(_customerService.AddUser(customer))
             {
-                return Ok("Customer added");
+                return Ok("User added");
             }
-            return BadRequest("Customer is already added");
+            return BadRequest("User is already added");
         }
 
         [HttpDelete("delete_customer")]
-        public ActionResult DeleteCustomerById([FromBody] RemoveCustomerDto customer)
+        public ActionResult DeleteUserById([FromBody] RemoveUserDto customer)
         {
-            if(_customerService.RemoveCustomerById(customer))
+            if(_customerService.RemoveUserById(customer))
             {
-                return Ok("Customer deleted");
+                return Ok("User deleted");
             }
-            return BadRequest("Customer is not in list of users");
+            return BadRequest("User is not in list of users");
         }
 
         [HttpPut("update_customer_name")]
-        public ActionResult PutUpdateCustomer([FromBody] UpdateCustomerDto customer)
+        public ActionResult PutUpdateUser([FromBody] UpdateUserDto customer)
         {
-            if(_customerService.UpdateCustomer(customer))
+            if(_customerService.UpdateUser(customer))
             {
-                return Ok("Customer updated");
+                return Ok("User updated");
             }
-            return BadRequest("Customer was not updated successfully");
+            return BadRequest("User was not updated successfully");
         }
     }
 }

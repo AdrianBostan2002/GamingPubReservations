@@ -35,7 +35,7 @@ namespace DataAccessLayer
 
         public DbSet<GamingPub> GamingPubs { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<GamingPlatform> GamingPlatforms { get; set; }
     }
