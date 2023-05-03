@@ -12,7 +12,7 @@ namespace GamingPubReservations.Settings
             applicationBuilder.Services.AddControllers();
             applicationBuilder.Services.AddSwaggerGen();
 
-            //applicationBuilder.Services.AddDbContext<AppDbContext>();
+            applicationBuilder.Services.AddDbContext<AppDbContext>();
 
             AddRepositories(applicationBuilder.Services);
             AddServices(applicationBuilder.Services);
@@ -30,6 +30,7 @@ namespace GamingPubReservations.Settings
             services.AddScoped<CustomersRepository>();
             services.AddScoped<GamingPubsRepository>();
             services.AddScoped<ReservationsRepository>();
+            services.AddScoped<UnitOfWork>();
         }
     }
 }

@@ -8,10 +8,10 @@ namespace DataAccessLayer
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string configurationString = ConfigurationManager.ConnectionStrings["MsSqlServerConnectionString"].ConnectionString;
+           // string configurationString = ConfigurationManager.ConnectionStrings["MsSqlServerConnectionString"].ConnectionString;
 
             optionsBuilder
-                .UseSqlServer(configurationString)
+                .UseSqlServer("Server=localhost;Database=GamingPubsDatabase;User Id=Adi123;Password=123;TrustServerCertificate=True")
                 .LogTo(Console.WriteLine);
 
         }
@@ -20,17 +20,17 @@ namespace DataAccessLayer
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Reservation>()
-                .HasOne(r => r.GamingPub)
-                .WithMany(p => p.Reservations)
-                .HasForeignKey(r => r.GamingPubId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Reservation>()
+            //    .HasOne(r => r.GamingPub)
+            //    .WithMany(p => p.Reservations)
+            //    .HasForeignKey(r => r.GamingPubId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Reservation>()
-                .HasOne(r => r.GamingPlatform)
-                .WithMany(p => p.Reservations)
-                .HasForeignKey(r => r.GamingPlatformId)
-                .OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<Reservation>()
+            //    .HasOne(r => r.GamingPlatform)
+            //    .WithMany(p => p.Reservations)
+            //    .HasForeignKey(r => r.GamingPlatformId)
+            //    .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<GamingPub> GamingPubs { get; set; }
