@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230502210116_ModifiedDbContext")]
-    partial class ModifiedDbContext
+    [Migration("20230503114052_ChangedDatabase")]
+    partial class ChangedDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,41 +54,6 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Adress");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AdressId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdressId");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.GamingPlatform", b =>
@@ -149,9 +114,6 @@ namespace DataAccessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
@@ -164,13 +126,16 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("UserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("GamingPlatformId");
 
                     b.HasIndex("GamingPubId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -216,6 +181,52 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("Schedules");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdressId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdressId");
+
+                    b.ToTable("Customers", (string)null);
+                });
+
             modelBuilder.Entity("GamingPlatformGamingPub", b =>
                 {
                     b.Property<int>("GamingPlatformsId")
@@ -229,17 +240,6 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("GamingPubsId");
 
                     b.ToTable("GamingPlatformGamingPub");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
-                {
-                    b.HasOne("DataAccessLayer.Entities.Adress", "Adress")
-                        .WithMany()
-                        .HasForeignKey("AdressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Adress");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.GamingPub", b =>
@@ -263,12 +263,6 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("DataAccessLayer.Entities.Reservation", b =>
                 {
-                    b.HasOne("DataAccessLayer.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DataAccessLayer.Entities.GamingPlatform", "GamingPlatform")
                         .WithMany("Reservations")
                         .HasForeignKey("GamingPlatformId")
@@ -278,14 +272,31 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("DataAccessLayer.Entities.GamingPub", "GamingPub")
                         .WithMany("Reservations")
                         .HasForeignKey("GamingPubId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.HasOne("DataAccessLayer.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GamingPlatform");
 
                     b.Navigation("GamingPub");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.Adress", "Adress")
+                        .WithMany()
+                        .HasForeignKey("AdressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Adress");
                 });
 
             modelBuilder.Entity("GamingPlatformGamingPub", b =>

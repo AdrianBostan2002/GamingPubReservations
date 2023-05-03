@@ -31,6 +31,8 @@ namespace DataAccessLayer
             //    .WithMany(p => p.Reservations)
             //    .HasForeignKey(r => r.GamingPlatformId)
             //    .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>().ToTable("User");
         }
 
         public DbSet<GamingPub> GamingPubs { get; set; }
