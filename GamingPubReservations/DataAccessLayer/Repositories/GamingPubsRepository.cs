@@ -2,24 +2,28 @@
 
 namespace DataAccessLayer.Repositories
 {
-    public class GamingPubsRepository
+    public class GamingPubsRepository: RepositoryBase<GamingPub>
     {
-        public List<GamingPub> GetAll()
-        {
-            throw new NotImplementedException();
-            //return AppDbContext.GamingPubs;
-        }
+        public GamingPubsRepository(AppDbContext appDbContext) : base(appDbContext) { }
 
         public GamingPub GetPubByName(string name)
         {
-            throw new NotImplementedException();
-            //return AppDbContext.GamingPubs.FirstOrDefault(x => x.Name == name);
+            return _dbContext.GamingPubs.FirstOrDefault(x => x.Name == name);
         }
 
         public void AddGamingPub(GamingPub pub)
         {
-            throw new NotImplementedException();
-            //AppDbContext.GamingPubs.Add(pub);
+            _dbContext.GamingPubs.Add(pub);
+        }
+
+        public void AddReservation(GamingPub gamingPub, Reservation reservation)
+        {
+            gamingPub.Reservations.Add(reservation);
+        }
+
+        public void RemoveReservation(GamingPub gamingPub, Reservation reservation)
+        {
+            gamingPub.Reservations.Remove(reservation);
         }
     }
 }
