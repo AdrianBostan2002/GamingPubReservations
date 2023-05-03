@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DataAccessLayer.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataAccessLayer.Entities
 {
@@ -17,5 +18,11 @@ namespace DataAccessLayer.Entities
 
         public int AdressId { get; set; }
         public Adress Adress { get; set; }
+
+        public string PasswordHash { get; set; }
+
+        public string Email { get; set; }
+
+        public RoleType Role { get; set; }
     }
 }
