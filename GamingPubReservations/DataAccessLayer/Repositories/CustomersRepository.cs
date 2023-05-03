@@ -2,32 +2,25 @@
 
 namespace DataAccessLayer.Repositories
 {
-    public class CustomersRepository
+    public class CustomersRepository: RepositoryBase<Customer>
     {
-        public List<Customer> GetAll()
-        {
-            throw new NotImplementedException();
-            //return AppDbContext.Customers;
-        }
+        public CustomersRepository(AppDbContext appDbContext) : base(appDbContext) { }
 
         public void AddCustomer(Customer customer)
         {
-            throw new NotImplementedException();
-            //AppDbContext.Customers.Add(customer);
+            _dbContext.Customers.Add(customer);
         }
 
         public void RemoveCustomer(Customer customer)
         {
-            throw new NotImplementedException();
-            //AppDbContext.Customers.Remove(customer);
+            _dbContext.Customers.Remove(customer);
         }
 
         public Customer GetCustomerById(int id)
         {
-            throw new NotImplementedException();
-            //var result = AppDbContext.Customers.FirstOrDefault(x => x.Id == id);
+            var result = _dbContext.Customers.FirstOrDefault(x => x.Id == id);
 
-            //return result;
+            return result;
         }
     }
 }
