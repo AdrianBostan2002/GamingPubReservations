@@ -10,8 +10,7 @@ namespace DataAccessLayer.Entities
         public int AdressId { get; set; }
         public Adress Adress { get; set; }
 
-        public int ScheduleId { get; set; }
-        public Schedule Schedule { get; set; }
+        public virtual ICollection<DaySchedule> Schedule { get; set; }
 
         public List<Reservation> Reservations { get; set; }
 
