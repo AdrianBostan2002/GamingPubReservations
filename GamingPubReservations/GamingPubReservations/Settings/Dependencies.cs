@@ -12,7 +12,7 @@ namespace GamingPubReservations.Settings
             applicationBuilder.Services.AddControllers();
             applicationBuilder.Services.AddSwaggerGen();
 
-            //applicationBuilder.Services.AddDbContext<AppDbContext>();
+            applicationBuilder.Services.AddDbContext<AppDbContext>();
 
             AddRepositories(applicationBuilder.Services);
             AddServices(applicationBuilder.Services);
@@ -20,16 +20,17 @@ namespace GamingPubReservations.Settings
 
         private static void AddServices(IServiceCollection services)
         {
-            services.AddScoped<CustomerService>();
+            services.AddScoped<UserService>();
             services.AddScoped<ReservationService>();
             services.AddScoped<GamingPubService>();
         }
 
         private static void AddRepositories(IServiceCollection services)
         {
-            services.AddScoped<CustomersRepository>();
+            services.AddScoped<UsersRepository>();
             services.AddScoped<GamingPubsRepository>();
             services.AddScoped<ReservationsRepository>();
+            services.AddScoped<UnitOfWork>();
         }
     }
 }

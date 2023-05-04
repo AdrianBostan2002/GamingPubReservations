@@ -53,7 +53,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("Adress");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.Customer", b =>
+            modelBuilder.Entity("DataAccessLayer.Entities.DaySchedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,31 +61,23 @@ namespace DataAccessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AdressId")
+                    b.Property<int>("Day")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<string>("EndTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("SpecialDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("StartTime")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdressId");
-
-                    b.ToTable("Customers");
+                    b.ToTable("DaySchedule");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.GamingPlatform", b =>
@@ -126,14 +118,9 @@ namespace DataAccessLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ScheduleId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AdressId");
-
-                    b.HasIndex("ScheduleId");
 
                     b.ToTable("GamingPubs");
                 });
@@ -145,9 +132,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -161,18 +145,21 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CustomerId");
+                    b.HasKey("Id");
 
                     b.HasIndex("GamingPlatformId");
 
                     b.HasIndex("GamingPubId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Reservations");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.Schedule", b =>
+            modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -180,37 +167,57 @@ namespace DataAccessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Friday")
+                    b.Property<int>("AdressId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Monday")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Saturday")
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Sunday")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Thursday")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tuesday")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Wednesday")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Schedules");
+                    b.HasIndex("AdressId");
+
+                    b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("DayScheduleGamingPub", b =>
+                {
+                    b.Property<int>("GamingPubsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ScheduleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GamingPubsId", "ScheduleId");
+
+                    b.HasIndex("ScheduleId");
+
+                    b.ToTable("DayScheduleGamingPub");
                 });
 
             modelBuilder.Entity("GamingPlatformGamingPub", b =>
@@ -228,17 +235,6 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("GamingPlatformGamingPub");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.Customer", b =>
-                {
-                    b.HasOne("DataAccessLayer.Entities.Adress", "Adress")
-                        .WithMany()
-                        .HasForeignKey("AdressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Adress");
-                });
-
             modelBuilder.Entity("DataAccessLayer.Entities.GamingPub", b =>
                 {
                     b.HasOne("DataAccessLayer.Entities.Adress", "Adress")
@@ -247,25 +243,11 @@ namespace DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DataAccessLayer.Entities.Schedule", "Schedule")
-                        .WithMany()
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Adress");
-
-                    b.Navigation("Schedule");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Reservation", b =>
                 {
-                    b.HasOne("DataAccessLayer.Entities.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DataAccessLayer.Entities.GamingPlatform", "GamingPlatform")
                         .WithMany("Reservations")
                         .HasForeignKey("GamingPlatformId")
@@ -275,14 +257,46 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("DataAccessLayer.Entities.GamingPub", "GamingPub")
                         .WithMany("Reservations")
                         .HasForeignKey("GamingPubId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.HasOne("DataAccessLayer.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GamingPlatform");
 
                     b.Navigation("GamingPub");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.Adress", "Adress")
+                        .WithMany()
+                        .HasForeignKey("AdressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Adress");
+                });
+
+            modelBuilder.Entity("DayScheduleGamingPub", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.GamingPub", null)
+                        .WithMany()
+                        .HasForeignKey("GamingPubsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccessLayer.Entities.DaySchedule", null)
+                        .WithMany()
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GamingPlatformGamingPub", b =>
