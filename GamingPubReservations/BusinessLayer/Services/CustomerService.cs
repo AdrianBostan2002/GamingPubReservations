@@ -6,27 +6,29 @@ namespace BusinessLayer.Services
 {
     public class UserService
     {
-        private UsersRepository customersRepository;
+        private UsersRepository userRepository;
+        private AuthorizationService authorizationService { get; set; }
 
-        public UserService(UsersRepository customersRepository)
+        public UserService(UsersRepository userRepository, AuthorizationService authorizationService)
         {
-            this.customersRepository = customersRepository;
+            this.userRepository = userRepository;
+            this.authorizationService = authorizationService;
         }
 
         public List<User> GetAll()
         {
-            var customers = customersRepository.GetAll();
+            var customers = userRepository.GetAll();
             return customers;
         }
 
         public bool AddUser(AddUserDto customer)
         {
-            var customers = customersRepository.GetAll();
+            var customers = userRepository.GetAll();
             var foundUser = customers.FirstOrDefault(x => x.FirstName == customer.Name);
 
             if (foundUser == null)
             {
-                customersRepository.AddUser(new User { FirstName = customer.Name });
+                userRepository.AddUser(new User { FirstName = customer.Name });
                 return true;
             }
 
@@ -35,11 +37,11 @@ namespace BusinessLayer.Services
 
         public bool RemoveUserById(RemoveUserDto customer)
         {
-            var foundUser = customersRepository.GetUserById(customer.Id);
+            var foundUser = userRepository.GetUserById(customer.Id);
 
             if (foundUser != null)
             {
-                customersRepository.RemoveUser(foundUser);
+                userRepository.RemoveUser(foundUser);
                 return true;
             }
 
@@ -50,7 +52,7 @@ namespace BusinessLayer.Services
         {
             if (!string.IsNullOrEmpty(customer.Name))
             {
-                var foundUser = customersRepository.GetUserById(customer.Id);
+                var foundUser = userRepository.GetUserById(customer.Id);
                 if (foundUser != null)
                 {
                     foundUser.FirstName = customer.Name;

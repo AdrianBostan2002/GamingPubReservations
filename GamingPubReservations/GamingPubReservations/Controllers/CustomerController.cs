@@ -52,5 +52,17 @@ namespace GamingPubReservations.Controllers
             }
             return BadRequest("User was not updated successfully");
         }
+
+        [HttpPost("register")]
+        public IActionResult Register(RegisterDto registerData)
+        {
+            return Ok();
+        }
+
+        [HttpPost("login")]
+        public IActionResult Register(LoginDto loginData)
+        {
+            return Ok();
+        }
     }
 }
