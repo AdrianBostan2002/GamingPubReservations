@@ -6,19 +6,26 @@ namespace DataAccessLayer.Repositories
     {
         public UsersRepository(AppDbContext appDbContext) : base(appDbContext) { }
 
-        public void AddUser(User customer)
+        public void AddUser(User user)
         {
-            _dbContext.Users.Add(customer);
+            _dbContext.Users.Add(user);
         }
 
-        public void RemoveUser(User customer)
+        public void RemoveUser(User user)
         {
-            _dbContext.Users.Remove(customer);
+            _dbContext.Users.Remove(user);
         }
 
         public User GetUserById(int id)
         {
             var result = _dbContext.Users.FirstOrDefault(x => x.Id == id);
+
+            return result;
+        }
+
+        public User GetUserByFirstNameAndLastName(string firstName, string lastName)
+        {
+            var result = _dbContext.Users.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
 
             return result;
         }

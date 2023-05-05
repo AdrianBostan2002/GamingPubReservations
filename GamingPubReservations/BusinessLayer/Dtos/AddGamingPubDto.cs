@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DataAccessLayer.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.Dtos
 {
@@ -11,6 +7,16 @@ namespace BusinessLayer.Dtos
     {
         [Required, MaxLength(100)]
         public string Name { get; set; }
-        public string Address { get; set; }
+
+        public AddAddressDto AddAdressDto { get; set; }
+
+        public List<AddDayScheduleDto> Schedule { get; set; }
+
+        public List<Reservation>? Reservations { get; set; }
+
+        public List<AddGamingPlatformDto> GamingPlatforms { get; set; }
+
+        [DataType(DataType.PhoneNumber)]
+        public string PhoneNumber { get; set; }
     }
 }

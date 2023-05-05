@@ -10,44 +10,41 @@ namespace GamingPubReservations.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private UserService _customerService;
+        private UserService _userService;
 
-        public UserController(UserService customerService)
+        public UserController(UserService userService)
         {
-            _customerService = customerService;
+            _userService = userService;
         }
 
-        [HttpGet("all_customers")]
+        [HttpGet("all_users")]
         public ActionResult<List<User>> GetAllUsers()
         {
-            var customers = _customerService.GetAll();
-            return Ok(customers);
+            var users = _userService.GetAll();
+            return Ok(users);
         }
 
-        [HttpPost("add_customer")]
-        public ActionResult PostNewUser([FromBody] AddUserDto customer)
+        [HttpPost("register_user")]
+        public ActionResult PostNewUser([FromBody] AddUserDto user)
         {
-            if(_customerService.AddUser(customer))
-            {
-                return Ok("User added");
-            }
-            return BadRequest("User is already added");
+            _userService.Register(user);
+            return Ok();
         }
 
-        [HttpDelete("delete_customer")]
-        public ActionResult DeleteUserById([FromBody] RemoveUserDto customer)
+        [HttpDelete("delete_user")]
+        public ActionResult DeleteUserById([FromBody] RemoveUserDto user)
         {
-            if(_customerService.RemoveUserById(customer))
+            if(_userService.RemoveUserById(user))
             {
                 return Ok("User deleted");
             }
             return BadRequest("User is not in list of users");
         }
 
-        [HttpPut("update_customer_name")]
-        public ActionResult PutUpdateUser([FromBody] UpdateUserDto customer)
+        [HttpPut("update_user_name")]
+        public ActionResult PutUpdateUser([FromBody] UpdateUserDto user)
         {
-            if(_customerService.UpdateUser(customer))
+            if(_userService.UpdateUser(user))
             {
                 return Ok("User updated");
             }
