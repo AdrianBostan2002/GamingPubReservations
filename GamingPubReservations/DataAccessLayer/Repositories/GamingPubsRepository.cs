@@ -11,11 +11,6 @@ namespace DataAccessLayer.Repositories
             return _dbContext.GamingPubs.FirstOrDefault(x => x.Name == name);
         }
 
-        public void AddGamingPub(GamingPub pub)
-        {
-            _dbContext.GamingPubs.Add(pub);
-        }
-
         public void AddReservation(GamingPub gamingPub, Reservation reservation)
         {
             gamingPub.Reservations.Add(reservation);

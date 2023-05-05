@@ -30,6 +30,7 @@ namespace GamingPubReservations.Settings
             services.AddScoped<UsersRepository>();
             services.AddScoped<GamingPubsRepository>();
             services.AddScoped<ReservationsRepository>();
+            services.AddScoped<AddressRepository>();
             services.AddScoped<UnitOfWork>();
         }
     }
