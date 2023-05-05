@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Dtos;
 using BusinessLayer.Services;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamingPubReservations.Controllers
@@ -54,12 +55,14 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public IActionResult Register(RegisterDto registerData)
         {
             return Ok();
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public IActionResult Register(LoginDto loginData)
         {
             return Ok();
