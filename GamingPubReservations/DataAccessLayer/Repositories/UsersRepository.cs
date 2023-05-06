@@ -23,6 +23,12 @@ namespace DataAccessLayer.Repositories
             return result;
         }
 
+        public User GetUserByEmail(string email)
+        {
+            var result = _dbContext.Users.FirstOrDefault(x=>x.Email == email);
+            return result;
+        }
+
         public User GetUserByFirstNameAndLastName(string firstName, string lastName)
         {
             var result = _dbContext.Users.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);

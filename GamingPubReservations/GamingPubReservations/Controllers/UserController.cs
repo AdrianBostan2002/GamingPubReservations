@@ -24,13 +24,6 @@ namespace GamingPubReservations.Controllers
             return Ok(users);
         }
 
-        [HttpPost("register_user")]
-        public ActionResult PostNewUser([FromBody] AddUserDto user)
-        {
-            _userService.Register(user);
-            return Ok();
-        }
-
         [HttpDelete("delete_user")]
         public ActionResult DeleteUserById([FromBody] RemoveUserDto user)
         {
@@ -53,16 +46,28 @@ namespace GamingPubReservations.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public IActionResult Register(RegisterDto registerData)
+        public IActionResult Register([FromBody] RegisterDto registerData)
         {
-            return Ok();
+            if (_userService.Register(registerData))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Email already in use");
+            }
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public IActionResult Register(LoginDto loginData)
+        public IActionResult Register([FromBody] LoginDto loginData)
         {
-            return Ok();
+            var jwtToken = _userService.ValidateLogin(loginData);
+            if(jwtToken == null)
+            {
+                return BadRequest("Wrong email or password");
+            }
+            return Ok(new { token = jwtToken });
         }
     }
 }
