@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Dtos;
 using BusinessLayer.Services;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamingPubReservations.Controllers
@@ -23,13 +24,6 @@ namespace GamingPubReservations.Controllers
             return Ok(users);
         }
 
-        [HttpPost("register_user")]
-        public ActionResult PostNewUser([FromBody] AddUserDto user)
-        {
-            _userService.Register(user);
-            return Ok();
-        }
-
         [HttpDelete("delete_user")]
         public ActionResult DeleteUserById([FromBody] RemoveUserDto user)
         {
@@ -48,6 +42,32 @@ namespace GamingPubReservations.Controllers
                 return Ok("User updated");
             }
             return BadRequest("User was not updated successfully");
+        }
+
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public IActionResult Register([FromBody] RegisterDto registerData)
+        {
+            if (_userService.Register(registerData))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Email already in use");
+            }
+        }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public IActionResult Register([FromBody] LoginDto loginData)
+        {
+            var jwtToken = _userService.ValidateLogin(loginData);
+            if(jwtToken == null)
+            {
+                return BadRequest("Wrong email or password");
+            }
+            return Ok(new { token = jwtToken });
         }
     }
 }

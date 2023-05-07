@@ -1,9 +1,14 @@
 ﻿using DataAccessLayer.Enums;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.Dtos
 {
-    public class AddUserDto
+    public class RegisterDto
     {
         [Required, MaxLength(50)]
         public string FirstName { get; set; }

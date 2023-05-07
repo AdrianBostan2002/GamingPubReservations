@@ -20,6 +20,7 @@ namespace GamingPubReservations.Settings
 
         private static void AddServices(IServiceCollection services)
         {
+            services.AddScoped<AuthorizationService>();
             services.AddScoped<UserService>();
             services.AddScoped<ReservationService>();
             services.AddScoped<GamingPubService>();

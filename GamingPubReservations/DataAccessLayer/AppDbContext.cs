@@ -11,7 +11,7 @@ namespace DataAccessLayer
            // string configurationString = ConfigurationManager.ConnectionStrings["MsSqlServerConnectionString"].ConnectionString;
 
             optionsBuilder
-                .UseSqlServer("Server=localhost;Database=GamingPubsDatabase;User Id=Adi123;Password=123;TrustServerCertificate=True")
+                .UseSqlServer("Data Source=DESKTOP-UUC8F51;Server=localhost;Database=GamingPubsDatabase;Persist Security Info=True;User ID=stefan123;Password=123;TrustServerCertificate=True;TrustServerCertificate=True")
                 .LogTo(Console.WriteLine);
 
         }

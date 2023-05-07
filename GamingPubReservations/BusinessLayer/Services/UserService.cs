@@ -8,10 +8,12 @@ namespace BusinessLayer.Services
     public class UserService
     {
         private readonly UnitOfWork unitOfWork;
+        private readonly AuthorizationService authorizationService;
 
-        public UserService(UnitOfWork unitOfWork)
+        public UserService(UnitOfWork unitOfWork, AuthorizationService authorizationService)
         {
             this.unitOfWork = unitOfWork;
+            this.authorizationService = authorizationService;
         }
 
         public List<User> GetAll()
@@ -20,14 +22,14 @@ namespace BusinessLayer.Services
             return customers;
         }
 
-        public void Register(AddUserDto customer)
+        public bool Register(RegisterDto registerData)
         {
-            var foundUser = unitOfWork.UsersRepository.GetUserByFirstNameAndLastName(customer.FirstName, customer.LastName);
+            var foundUser = unitOfWork.UsersRepository.GetUserByFirstNameAndLastName(registerData.FirstName, registerData.LastName);
 
-            //TODO: Add authorization service
+            var passwordHash = authorizationService.HashPassword(registerData.Password);
 
 
-            AddAddressDto newAddresDto = customer.AddAdressDto;
+            AddAddressDto newAddresDto = registerData.AddAdressDto;
 
             if (foundUser == null)
             {
@@ -46,19 +48,43 @@ namespace BusinessLayer.Services
                     (
                         new User
                         {
-                            FirstName = customer.FirstName,
-                            LastName = customer.LastName,
-                            DateOfBirth = customer.DateOfBirth,
+                            FirstName = registerData.FirstName,
+                            LastName = registerData.LastName,
+                            DateOfBirth = registerData.DateOfBirth,
                             //TODO: FIX THIS
-                            PhoneNumber= customer.PhoneNumber,
-                            PasswordHash = customer.Password,
-                            Email= customer.Email,
+                            PhoneNumber = registerData.PhoneNumber,
+                            PasswordHash = passwordHash,
+                            Email = registerData.Email,
                             Adress = newAdress,
-                            Role = customer.Role
+                            Role = registerData.Role
                         });
                 unitOfWork.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
             }
 
+        }
+
+        public string ValidateLogin(LoginDto loginData)
+        {
+            var user = unitOfWork.UsersRepository.GetUserByEmail(loginData.Email);
+            if(user == null)
+            {
+                return null;
+            }
+            var isPasswordOk = authorizationService.VerifyHashedPassword(user.PasswordHash, loginData.Password);
+            if(isPasswordOk)
+            {
+                var role = user.Role;
+                return authorizationService.GetToken(user, role);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public bool RemoveUserById(RemoveUserDto customer)
