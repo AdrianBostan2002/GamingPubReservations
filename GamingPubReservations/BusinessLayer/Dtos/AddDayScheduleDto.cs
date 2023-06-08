@@ -1,4 +1,6 @@
-﻿namespace BusinessLayer.Dtos
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace BusinessLayer.Dtos
 {
     public class AddDayScheduleDto
     {
@@ -8,6 +10,7 @@
 
         public string EndTime { get; set; }
 
-        public DateTime? SpecialDate { get; set; }
+        [AllowNull]
+        public DateTime? SpecialDate { get; set; } = null;
     }
 }

@@ -12,6 +12,7 @@ namespace GamingPubReservations.Controllers
         {
             _gamingPubService = gamingPubService; 
         }
+
         [HttpGet("all_gaming_pubs")]
         public ActionResult<List<GamingPub>> GetAllGamingPubs()
         {

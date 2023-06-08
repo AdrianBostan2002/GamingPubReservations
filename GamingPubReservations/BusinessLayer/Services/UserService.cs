@@ -18,13 +18,13 @@ namespace BusinessLayer.Services
 
         public List<User> GetAll()
         {
-            var customers = unitOfWork.UsersRepository.GetAll();
+            var customers = unitOfWork.Users.GetAll();
             return customers;
         }
 
         public bool Register(RegisterDto registerUser)
         {
-            var foundUser = unitOfWork.UsersRepository.GetUserByFirstNameAndLastName(registerUser.FirstName, registerUser.LastName);
+            var foundUser = unitOfWork.Users.GetUserByFirstNameAndLastName(registerUser.FirstName, registerUser.LastName);
 
             var passwordHash = authorizationService.HashPassword(registerUser.Password);
 
@@ -37,7 +37,7 @@ namespace BusinessLayer.Services
 
             User newUser = registerUser.ToUser();
 
-            unitOfWork.UsersRepository.AddUser(newUser);
+            unitOfWork.Users.AddUser(newUser);
             unitOfWork.SaveChanges();
 
             return true;
@@ -45,7 +45,7 @@ namespace BusinessLayer.Services
 
         public string ValidateLogin(LoginDto loginData)
         {
-            var user = unitOfWork.UsersRepository.GetUserByEmail(loginData.Email);
+            var user = unitOfWork.Users.GetUserByEmail(loginData.Email);
             if (user == null)
             {
                 return null;
@@ -65,11 +65,11 @@ namespace BusinessLayer.Services
 
         public bool RemoveUserById(RemoveUserDto customer)
         {
-            var foundUser = unitOfWork.UsersRepository.GetUserById(customer.Id);
+            var foundUser = unitOfWork.Users.GetUserById(customer.Id);
 
             if (foundUser != null)
             {
-                unitOfWork.UsersRepository.RemoveUser(foundUser);
+                unitOfWork.Users.RemoveUser(foundUser);
                 return true;
             }
 
@@ -80,7 +80,7 @@ namespace BusinessLayer.Services
         {
             if (!string.IsNullOrEmpty(customer.Name))
             {
-                var foundUser = unitOfWork.UsersRepository.GetUserById(customer.Id);
+                var foundUser = unitOfWork.Users.GetUserById(customer.Id);
                 if (foundUser != null)
                 {
                     foundUser.FirstName = customer.Name;

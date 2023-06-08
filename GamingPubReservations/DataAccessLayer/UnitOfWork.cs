@@ -4,10 +4,11 @@ namespace DataAccessLayer
 {
     public class UnitOfWork
     {
-        public UsersRepository UsersRepository { get; }
-        public GamingPubsRepository GamingPubsRepository { get; }
-        public ReservationsRepository ReservationsRepository { get; }
-        public AddressRepository AddressRepository { get; }
+        public UsersRepository Users { get; }
+        public GamingPubsRepository GamingPubs { get; }
+        public ReservationsRepository Reservations { get; }
+        public AddressRepository Address { get; }
+        public ScheduleRepository Schedule { get; }
 
         private readonly AppDbContext _dbContext;
 
@@ -17,14 +18,16 @@ namespace DataAccessLayer
             UsersRepository customersRepository,
             GamingPubsRepository gamingPubsRepository,
             ReservationsRepository reservationsRepository,
-            AddressRepository addressRepository
+            AddressRepository addressRepository,
+            ScheduleRepository scheduleRepository
         )
         {
             _dbContext = dbContext;
-            UsersRepository = customersRepository;
-            GamingPubsRepository = gamingPubsRepository;
-            ReservationsRepository = reservationsRepository;
-            AddressRepository = addressRepository;
+            Users = customersRepository;
+            GamingPubs = gamingPubsRepository;
+            Reservations = reservationsRepository;
+            Address = addressRepository;
+            Schedule = scheduleRepository;
         }
 
         public void SaveChanges()

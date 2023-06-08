@@ -16,12 +16,12 @@ namespace BusinessLayer.Services
 
         public List<GamingPub> GetAll()
         {
-            return unitOfWork.GamingPubsRepository.GetAll();
+            return unitOfWork.GamingPubs.GetAll();
         }
 
         public bool AddGamingPub(AddGamingPubDto gamingPubDto)
         {
-            var foundGamingPub = unitOfWork.GamingPubsRepository.GetPubByName(gamingPubDto.Name);
+            var foundGamingPub = unitOfWork.GamingPubs.GetPubByName(gamingPubDto.Name);
 
             if(foundGamingPub != null) 
             {
@@ -30,7 +30,7 @@ namespace BusinessLayer.Services
 
             GamingPub newGamingPub = gamingPubDto.ToGamingPub();
 
-            unitOfWork.GamingPubsRepository.Insert(newGamingPub);
+            unitOfWork.GamingPubs.Insert(newGamingPub);
 
             unitOfWork.SaveChanges();
 
