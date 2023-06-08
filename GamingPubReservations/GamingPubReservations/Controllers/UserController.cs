@@ -50,7 +50,7 @@ namespace GamingPubReservations.Controllers
         {
             if (_userService.Register(registerData))
             {
-                return Ok();
+                return Ok("User registered successfully");
             }
             else
             {
@@ -60,7 +60,7 @@ namespace GamingPubReservations.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public IActionResult Register([FromBody] LoginDto loginData)
+        public IActionResult Login([FromBody] LoginDto loginData)
         {
             var jwtToken = _userService.ValidateLogin(loginData);
             if(jwtToken == null)
