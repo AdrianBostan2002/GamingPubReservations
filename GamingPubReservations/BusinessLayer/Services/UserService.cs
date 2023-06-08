@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Dtos;
+using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
-using DataAccessLayer.Repositories;
 
 namespace BusinessLayer.Services
 {
@@ -22,61 +22,37 @@ namespace BusinessLayer.Services
             return customers;
         }
 
-        public bool Register(RegisterDto registerData)
+        public bool Register(RegisterDto registerUser)
         {
-            var foundUser = unitOfWork.UsersRepository.GetUserByFirstNameAndLastName(registerData.FirstName, registerData.LastName);
+            var foundUser = unitOfWork.UsersRepository.GetUserByFirstNameAndLastName(registerUser.FirstName, registerUser.LastName);
 
-            var passwordHash = authorizationService.HashPassword(registerData.Password);
+            var passwordHash = authorizationService.HashPassword(registerUser.Password);
 
+            registerUser.Password = passwordHash;
 
-            AddAddressDto newAddresDto = registerData.AddAdressDto;
-
-            if (foundUser == null)
-            {
-                Adress newAdress = new Adress
-                {
-                    Country = newAddresDto.Country,
-                    City = newAddresDto.City,
-                    Street = newAddresDto.Street,
-                    ZipCode = newAddresDto.ZipCode,
-                    Number = newAddresDto.Number
-                };
-
-                unitOfWork.AddressRepository.Insert(newAdress);
-
-                unitOfWork.UsersRepository.AddUser
-                    (
-                        new User
-                        {
-                            FirstName = registerData.FirstName,
-                            LastName = registerData.LastName,
-                            DateOfBirth = registerData.DateOfBirth,
-                            //TODO: FIX THIS
-                            PhoneNumber = registerData.PhoneNumber,
-                            PasswordHash = passwordHash,
-                            Email = registerData.Email,
-                            Adress = newAdress,
-                            Role = registerData.Role
-                        });
-                unitOfWork.SaveChanges();
-                return true;
-            }
-            else
+            if (foundUser != null)
             {
                 return false;
             }
 
+            User newUser = registerUser.ToUser();
+
+            unitOfWork.UsersRepository.AddUser(newUser);
+            unitOfWork.SaveChanges();
+
+            return true;
         }
 
         public string ValidateLogin(LoginDto loginData)
         {
             var user = unitOfWork.UsersRepository.GetUserByEmail(loginData.Email);
-            if(user == null)
+            if (user == null)
             {
                 return null;
             }
+
             var isPasswordOk = authorizationService.VerifyHashedPassword(user.PasswordHash, loginData.Password);
-            if(isPasswordOk)
+            if (isPasswordOk)
             {
                 var role = user.Role;
                 return authorizationService.GetToken(user, role);

@@ -1,5 +1,4 @@
-﻿using DataAccessLayer.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BusinessLayer.Dtos
 {
@@ -9,12 +8,6 @@ namespace BusinessLayer.Dtos
         public string Name { get; set; }
 
         public AddAddressDto AddAdressDto { get; set; }
-
-        public List<AddDayScheduleDto> Schedule { get; set; }
-
-        public List<Reservation>? Reservations { get; set; }
-
-        public List<AddGamingPlatformDto> GamingPlatforms { get; set; }
 
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
