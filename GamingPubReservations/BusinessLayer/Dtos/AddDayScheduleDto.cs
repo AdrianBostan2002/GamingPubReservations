@@ -1,6 +1,4 @@
-﻿using DataAccessLayer.Entities;
-
-namespace BusinessLayer.Dtos
+﻿namespace BusinessLayer.Dtos
 {
     public class AddDayScheduleDto
     {
@@ -11,7 +9,5 @@ namespace BusinessLayer.Dtos
         public string EndTime { get; set; }
 
         public DateTime? SpecialDate { get; set; }
-
-        public virtual ICollection<GamingPub> GamingPubs { get; set; }
     }
 }

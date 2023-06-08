@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Dtos;
+using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 
@@ -18,42 +19,21 @@ namespace BusinessLayer.Services
             return unitOfWork.GamingPubsRepository.GetAll();
         }
 
-        public bool AddGamingPub(AddGamingPubDto gamingPub)
+        public bool AddGamingPub(AddGamingPubDto gamingPubDto)
         {
-            var foundGamingPub = unitOfWork.GamingPubsRepository.GetPubByName(gamingPub.Name);
+            var foundGamingPub = unitOfWork.GamingPubsRepository.GetPubByName(gamingPubDto.Name);
 
             if(foundGamingPub != null) 
             {
                 return false;
             }
 
-            AddAddressDto newAddresDto = gamingPub.AddAdressDto;
+            GamingPub newGamingPub = gamingPubDto.ToGamingPub();
 
-            Adress newAdress = new Adress
-            {
-                Country = newAddresDto.Country,
-                City = newAddresDto.City,
-                Street = newAddresDto.Street,
-                ZipCode = newAddresDto.ZipCode,
-                Number = newAddresDto.Number
-            };
+            unitOfWork.GamingPubsRepository.Insert(newGamingPub);
 
-            unitOfWork.AddressRepository.Insert(newAdress);
+            unitOfWork.SaveChanges();
 
-
-            //TODO: Use mappers to map dtos
-
-            //TODO: To finish this you have to create next mapper: MapGamingPlatformDtosToGamingPlatforms
-
-            //Gaming
-
-            //GamingPub newGamingPub = new GamingPub
-            //{
-            //    Name = gamingPub.Name,
-            //    //PhoneNumber = gamingPub
-            //};
-
-            //unitOfWork.GamingPubsRepository.Insert(newGamingPub);
             return true;
         }
     }
