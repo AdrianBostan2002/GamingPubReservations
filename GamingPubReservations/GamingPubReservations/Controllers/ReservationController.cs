@@ -1,10 +1,11 @@
-﻿using BusinessLayer.Services;
+﻿using BusinessLayer.Dtos;
+using BusinessLayer.Services;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamingPubReservations.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]/")]
     [ApiController]
     public class ReservationController : ControllerBase
     {
@@ -14,6 +15,37 @@ namespace GamingPubReservations.Controllers
         {
             _reservationService = reservationService;
         }
+
+        [HttpPost("add")]
+        public IActionResult PostNewReservation(AddOrUpdateReservationDto addReservationDto)
+        {
+            if(_reservationService.AddReservation(addReservationDto))
+            {
+                return Ok("Reservation added");
+            }
+            return BadRequest($"Reservation wasn't added because gaming pub with id {addReservationDto.GamingPubId} doesn't exist or PlatformId is invalid");
+        }
+
+        [HttpPut("update/{reservationId}")]
+        public IActionResult UpdateReservation([FromBody] AddOrUpdateReservationDto updateReservationDto, [FromRoute] int reservationId)
+        {
+            if(_reservationService.UpdateReservation(updateReservationDto, reservationId))
+            {
+                return Ok("Reservation updated");
+            }
+            return BadRequest($"Reservation wasn't updated because reservation with id {reservationId} doesn't exist");
+        }
+
+        [HttpDelete("delete/{reservationId}")]
+        public IActionResult DeleteReservation([FromRoute] int reservationId)
+        {
+            if(_reservationService.DeleteReservation(reservationId))
+            {
+                return Ok("Reservation deleted");
+            }
+            return BadRequest($"Reservation wasn't deleted because reservation with id {reservationId} doesn't exist");
+        }
+
 
         [HttpGet("all_reservations")]
         public ActionResult<List<Reservation>> GetAllReservations()

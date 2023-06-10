@@ -33,6 +33,7 @@ namespace GamingPubReservations.Settings
             services.AddScoped<ReservationsRepository>();
             services.AddScoped<AddressRepository>();
             services.AddScoped<ScheduleRepository>();
+            services.AddScoped<GamingPlatformRepository>();
             services.AddScoped<UnitOfWork>();
         }
     }
