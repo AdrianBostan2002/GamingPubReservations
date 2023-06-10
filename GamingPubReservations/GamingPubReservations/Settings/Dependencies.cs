@@ -6,7 +6,6 @@ namespace GamingPubReservations.Settings
 {
     public static class Dependencies
     {
-
         public static void Inject(WebApplicationBuilder applicationBuilder)
         {
             applicationBuilder.Services.AddControllers();
@@ -24,6 +23,7 @@ namespace GamingPubReservations.Settings
             services.AddScoped<UserService>();
             services.AddScoped<ReservationService>();
             services.AddScoped<GamingPubService>();
+            services.AddScoped<ScheduleService>();
         }
 
         private static void AddRepositories(IServiceCollection services)
@@ -32,6 +32,7 @@ namespace GamingPubReservations.Settings
             services.AddScoped<GamingPubsRepository>();
             services.AddScoped<ReservationsRepository>();
             services.AddScoped<AddressRepository>();
+            services.AddScoped<ScheduleRepository>();
             services.AddScoped<UnitOfWork>();
         }
     }

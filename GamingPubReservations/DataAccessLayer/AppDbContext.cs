@@ -1,6 +1,5 @@
 ﻿using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 
 namespace DataAccessLayer
 {

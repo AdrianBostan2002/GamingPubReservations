@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GamingPubReservations.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class GamingPubController : ControllerBase
     {
         private GamingPubService _gamingPubService;
@@ -12,6 +14,7 @@ namespace GamingPubReservations.Controllers
         {
             _gamingPubService = gamingPubService; 
         }
+
         [HttpGet("all_gaming_pubs")]
         public ActionResult<List<GamingPub>> GetAllGamingPubs()
         {
