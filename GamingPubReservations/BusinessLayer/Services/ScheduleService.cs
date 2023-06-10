@@ -44,6 +44,29 @@ namespace BusinessLayer.Services
             return true;
         }
 
+        public bool DeleteSchedule(int gamingPubId)
+        {
+            var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
+
+            if (foundGamingPub == null)
+            {
+                return false;
+            }
+
+            foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
+
+            if(foundGamingPub.Schedule.Count==0)
+            {
+                return false;
+            }
+
+            foundGamingPub.Schedule.Clear();
+
+            unitOfWork.SaveChanges();
+
+            return true;
+        }
+
         private void SetGamingPubForEveryDayInSchedule(List<DaySchedule> schedule, GamingPub gamingPub)
         {
             foreach (var day in schedule)

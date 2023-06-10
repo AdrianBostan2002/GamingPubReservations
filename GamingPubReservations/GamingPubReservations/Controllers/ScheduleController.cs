@@ -24,5 +24,18 @@ namespace GamingPubReservations.Controllers
             }
             return BadRequest("Gaming Pub doesn't exist or it has already a schedule");
         }
+
+        [HttpDelete("delete_schedule/{gamingPubId}")]
+        public IActionResult DeleteSchedule([FromRoute] int gamingPubId)
+        {
+            if(_scheduleService.DeleteSchedule(gamingPubId))
+            {
+                return Ok("Schedule deleted");
+            }
+            else
+            {
+                return BadRequest("GamingPub doesn't have any schedule");
+            }
+        }
     }
 }
