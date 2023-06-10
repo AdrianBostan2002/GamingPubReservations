@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Repositories;
+﻿using DataAccessLayer.Entities;
+using DataAccessLayer.Repositories;
 
 namespace DataAccessLayer
 {
@@ -9,6 +10,7 @@ namespace DataAccessLayer
         public ReservationsRepository Reservations { get; }
         public AddressRepository Address { get; }
         public ScheduleRepository Schedule { get; }
+        public GamingPlatformRepository GamingPlatforms {get;}
 
         private readonly AppDbContext _dbContext;
 
@@ -19,7 +21,8 @@ namespace DataAccessLayer
             GamingPubsRepository gamingPubsRepository,
             ReservationsRepository reservationsRepository,
             AddressRepository addressRepository,
-            ScheduleRepository scheduleRepository
+            ScheduleRepository scheduleRepository,
+            GamingPlatformRepository gamingPlatformRepository
         )
         {
             _dbContext = dbContext;
@@ -28,6 +31,7 @@ namespace DataAccessLayer
             Reservations = reservationsRepository;
             Address = addressRepository;
             Schedule = scheduleRepository;
+            GamingPlatforms = gamingPlatformRepository;
         }
 
         public void SaveChanges()
