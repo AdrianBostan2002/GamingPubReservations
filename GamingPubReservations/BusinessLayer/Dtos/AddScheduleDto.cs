@@ -6,6 +6,6 @@ namespace BusinessLayer.Dtos
     {
         public int GamingPubId { get; set; }
 
-        public List<AddDayScheduleDto> Schedule { get; set; }
+        public List<AddOrUpdateDayScheduleDto> Schedule { get; set; }
     }
 }

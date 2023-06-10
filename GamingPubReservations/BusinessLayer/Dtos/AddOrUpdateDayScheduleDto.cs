@@ -2,7 +2,7 @@
 
 namespace BusinessLayer.Dtos
 {
-    public class AddDayScheduleDto
+    public class AddOrUpdateDayScheduleDto
     {
         public DayOfWeek Day { get; set; }
 

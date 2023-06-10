@@ -5,7 +5,7 @@ namespace BusinessLayer.Mapping
 {
     public static class ScheduleMappingExtensions
     {
-        public static List<DaySchedule> ToDaySchedule(this AddScheduleDto addScheduleDto)
+        public static List<DaySchedule> ToSchedule(this AddScheduleDto addScheduleDto)
         {
             List<DaySchedule> daySchedules = new List<DaySchedule>();
 
@@ -24,6 +24,17 @@ namespace BusinessLayer.Mapping
             }
 
             return daySchedules;
+        }
+
+        public static DaySchedule ToDaySchedule(this AddOrUpdateDayScheduleDto dayScheduleDto)
+        {
+            return new DaySchedule
+            {
+                Day = dayScheduleDto.Day,
+                StartTime = dayScheduleDto.StartTime,
+                EndTime = dayScheduleDto.EndTime,
+                SpecialDate = dayScheduleDto.SpecialDate
+            };
         }
     }
 }

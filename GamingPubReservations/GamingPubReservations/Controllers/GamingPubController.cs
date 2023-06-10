@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GamingPubReservations.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class GamingPubController : ControllerBase
     {
         private GamingPubService _gamingPubService;

@@ -30,13 +30,74 @@ namespace BusinessLayer.Services
                 return false;
             }
 
-            List<DaySchedule> schedule = addScheduleDto.ToDaySchedule();
+            List<DaySchedule> schedule = addScheduleDto.ToSchedule();
 
             SetGamingPubForEveryDayInSchedule(schedule, foundGamingPub);
 
             foreach (DaySchedule day in schedule)
             {
                 unitOfWork.Schedule.Insert(day);
+            }
+
+            unitOfWork.SaveChanges();
+
+            return true;
+        }
+
+        public bool AddSameScheduleForDifferentGamingPub(int sourceGamingPubId, int destinationGamingPubId)
+        {
+            var sourceGamingPub = unitOfWork.GamingPubs.GetById(sourceGamingPubId);
+            var destinationGamingPub = unitOfWork.GamingPubs.GetById(destinationGamingPubId);
+
+            if(sourceGamingPub == null || destinationGamingPub == null)
+            {
+                return false;
+            }
+
+            sourceGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(sourceGamingPubId);
+            
+            if(sourceGamingPub.Schedule.Count == 0)
+            {
+                return false;
+            }
+
+            destinationGamingPub.Schedule = new List<DaySchedule>(sourceGamingPub.Schedule);
+
+            unitOfWork.SaveChanges();
+
+            return true;
+        }
+
+        public bool UpdateDaySchedule(AddOrUpdateDayScheduleDto updateDayDto, int gamingPubId)
+        {
+            var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
+
+            if (foundGamingPub == null)
+            {
+                return false;
+            }
+
+            foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
+
+            DaySchedule updatedDay = updateDayDto.ToDaySchedule();
+
+            DaySchedule foundDay = foundGamingPub.Schedule.Where(d => d.Day == updatedDay.Day).FirstOrDefault();
+
+            if (foundDay == null)
+            {
+                if (foundGamingPub.Schedule == null)
+                {
+                    foundGamingPub.Schedule = new List<DaySchedule>();
+                }
+
+                foundGamingPub.Schedule.Add(updatedDay);
+            }
+            else
+            {
+                foundDay.Day = updatedDay.Day;
+                foundDay.StartTime = updatedDay.StartTime;
+                foundDay.EndTime = updatedDay.EndTime;
+                foundDay.SpecialDate = updatedDay.SpecialDate;
             }
 
             unitOfWork.SaveChanges();
@@ -55,7 +116,7 @@ namespace BusinessLayer.Services
 
             foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
 
-            if(foundGamingPub.Schedule.Count==0)
+            if (foundGamingPub.Schedule.Count == 0)
             {
                 return false;
             }
