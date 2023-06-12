@@ -128,9 +128,7 @@ namespace BusinessLayer.Services
 
                 if (unAvailableReservations.Count == 0)
                 {
-                    AvailableReservation availableReservation = CreateNewAvailableReservation(startHour, specificDay, gamingPub.Name, gamingPub.GamingPlatforms.ToList());
-
-                    allAvailablesReservations.Add(availableReservation);
+                    NoReservationsCase(specificDay, gamingPub, startHour, allAvailablesReservations);
                 }
                 else
                 {
@@ -156,6 +154,13 @@ namespace BusinessLayer.Services
             }
 
             return allAvailablesReservations;
+        }
+
+        private void NoReservationsCase(DateTime specificDay, GamingPub gamingPub, int startHour, List<AvailableReservation> allAvailablesReservations)
+        {
+            AvailableReservation availableReservation = CreateNewAvailableReservation(startHour, specificDay, gamingPub.Name, gamingPub.GamingPlatforms.ToList());
+
+            allAvailablesReservations.Add(availableReservation);
         }
 
         private void GetStartHourAndEndHour(DaySchedule? day, out int startHour, out int endHour)
