@@ -18,5 +18,8 @@ namespace DataAccessLayer.Entities
 
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
+
+        //TODO: Create a new Class which represents many to many table and add a new field named Number
+        // which represents the number of gaming platform type from a gaming pub
     }
 }

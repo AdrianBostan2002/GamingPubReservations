@@ -46,7 +46,7 @@ namespace BusinessLayer.Services
         {
             Reservation foundReservation = unitOfWork.Reservations.GetById(reservationId);
 
-            if(foundReservation == null)
+            if (foundReservation == null)
             {
                 return false;
             }
@@ -60,9 +60,9 @@ namespace BusinessLayer.Services
             }
 
             Reservation updatedReservation = updateReservationDto.ToReservation();
-            
+
             updatedReservation.Copy(foundReservation);
-            
+
             foundReservation.GamingPub = foundGamingPub;
             foundReservation.GamingPlatform = foundGamingPlatform;
 
@@ -87,9 +87,94 @@ namespace BusinessLayer.Services
             return true;
         }
 
+        public List<AvailableReservation> GetByDate(DateTime date, int gamingPubId)
+        {
+            var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
+
+            foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
+
+            foundGamingPub.GamingPlatforms = unitOfWork.GamingPlatforms.GetByGamingPub(foundGamingPub);
+
+            foundGamingPub.Reservations = unitOfWork.Reservations.GetAllReservationsFromSpecificDate(date, foundGamingPub);
+
+            if (foundGamingPub == null || foundGamingPub.Schedule == null || foundGamingPub.GamingPlatforms.Count == 0)
+            {
+                return null;
+            }
+
+            return GetAvailableReservationFromSpecificDay(date, foundGamingPub);
+        }
+
         public List<Reservation> GetAll()
         {
             return unitOfWork.Reservations.GetAll();
+        }
+
+
+        private List<AvailableReservation> GetAvailableReservationFromSpecificDay(DateTime specificDay, GamingPub gamingPub)
+        {
+            var day = gamingPub.Schedule.Where(x => x.Day == specificDay.DayOfWeek).FirstOrDefault();
+
+            if (day.StartTime == "Closed") return null;
+
+            int startHour = int.Parse(day.StartTime.Substring(0, 2));
+            int endHour = int.Parse(day.EndTime.Substring(0, 2));
+
+            List<AvailableReservation> allAvailablesReservations = new List<AvailableReservation>();
+
+            while (startHour != endHour)
+            {
+                List<Reservation> unAvailableReservations = gamingPub.Reservations.Where(x => x.StartDate.Hour == startHour).ToList();
+
+                if (unAvailableReservations.Count == 0)
+                {
+                    AvailableReservation availableReservation = CreateNewAvailableReservation(startHour, specificDay, gamingPub.Name, gamingPub.GamingPlatforms.ToList());
+
+                    allAvailablesReservations.Add(availableReservation);
+                }
+                else
+                {
+                    var unAvailablePlatforms = (from reservation in unAvailableReservations
+                                                group reservation by reservation.GamingPlatform into g
+                                                select new { GamingPlatform = g.Key, Count = g.Count() })
+                                .ToDictionary(item => item.GamingPlatform, item => item.Count);
+
+                    AvailableReservation availableReservation = CreateNewAvailableReservation(startHour, specificDay, gamingPub.Name, null);
+
+                    foreach (GamingPlatform gamingPlatform in gamingPub.GamingPlatforms)
+                    {
+                        if (!unAvailablePlatforms.ContainsKey(gamingPlatform))
+                        {
+                            availableReservation.AvailableGamingPlatformsName.Add(gamingPlatform.Name);
+                        }
+                    }
+
+                    if (availableReservation.AvailableGamingPlatformsName.Count != 0)
+                    {
+                        allAvailablesReservations.Add(availableReservation);
+                    }
+                }
+
+                startHour++;
+            }
+
+            return allAvailablesReservations;
+        }
+
+        private AvailableReservation CreateNewAvailableReservation(int startHour, DateTime specificDay, string name, List<GamingPlatform> gamingPlatforms)
+        {
+            DateTime availableStartDate = new DateTime(specificDay.Year, specificDay.Month, specificDay.Day, startHour, 0, 0);
+            DateTime availableEndDate = new DateTime(specificDay.Year, specificDay.Month, specificDay.Day, startHour + 1, 0, 0);
+
+            AvailableReservation availableReservation = new AvailableReservation
+            {
+                StartDate = availableStartDate,
+                EndDate = availableEndDate,
+                GamingPubName = name,
+                AvailableGamingPlatformsName = gamingPlatforms?.Select(p => p.Name).ToList() ?? new List<string>()
+            };
+
+            return availableReservation;
         }
     }
 }

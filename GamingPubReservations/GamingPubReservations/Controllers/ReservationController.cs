@@ -19,7 +19,7 @@ namespace GamingPubReservations.Controllers
         [HttpPost("add")]
         public IActionResult PostNewReservation(AddOrUpdateReservationDto addReservationDto)
         {
-            if(_reservationService.AddReservation(addReservationDto))
+            if (_reservationService.AddReservation(addReservationDto))
             {
                 return Ok("Reservation added");
             }
@@ -29,7 +29,7 @@ namespace GamingPubReservations.Controllers
         [HttpPut("update/{reservationId}")]
         public IActionResult UpdateReservation([FromBody] AddOrUpdateReservationDto updateReservationDto, [FromRoute] int reservationId)
         {
-            if(_reservationService.UpdateReservation(updateReservationDto, reservationId))
+            if (_reservationService.UpdateReservation(updateReservationDto, reservationId))
             {
                 return Ok("Reservation updated");
             }
@@ -39,13 +39,18 @@ namespace GamingPubReservations.Controllers
         [HttpDelete("delete/{reservationId}")]
         public IActionResult DeleteReservation([FromRoute] int reservationId)
         {
-            if(_reservationService.DeleteReservation(reservationId))
+            if (_reservationService.DeleteReservation(reservationId))
             {
                 return Ok("Reservation deleted");
             }
             return BadRequest($"Reservation wasn't deleted because reservation with id {reservationId} doesn't exist");
         }
 
+        [HttpGet("availables_by_date/{date}/{gamingPubId}")]
+        public ActionResult<List<AvailableReservation>> GetAvailableReservationsByDate([FromRoute] DateTime date, [FromRoute] int gamingPubId)
+        {
+            return _reservationService.GetByDate(date, gamingPubId);
+        }
 
         [HttpGet("all_reservations")]
         public ActionResult<List<Reservation>> GetAllReservations()
