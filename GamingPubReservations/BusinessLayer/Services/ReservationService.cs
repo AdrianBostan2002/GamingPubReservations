@@ -117,8 +117,8 @@ namespace BusinessLayer.Services
 
             if (day.StartTime == "Closed") return null;
 
-            int startHour = int.Parse(day.StartTime.Substring(0, 2));
-            int endHour = int.Parse(day.EndTime.Substring(0, 2));
+            int startHour, endHour;
+            GetStartHourAndEndHour(day, out startHour, out endHour);
 
             List<AvailableReservation> allAvailablesReservations = new List<AvailableReservation>();
 
@@ -134,10 +134,7 @@ namespace BusinessLayer.Services
                 }
                 else
                 {
-                    var unAvailablePlatforms = (from reservation in unAvailableReservations
-                                                group reservation by reservation.GamingPlatform into g
-                                                select new { GamingPlatform = g.Key, Count = g.Count() })
-                                .ToDictionary(item => item.GamingPlatform, item => item.Count);
+                    Dictionary<GamingPlatform, int> unAvailablePlatforms = GetUnavailablePlatformsAndTheirNumber(unAvailableReservations);
 
                     AvailableReservation availableReservation = CreateNewAvailableReservation(startHour, specificDay, gamingPub.Name, null);
 
@@ -159,6 +156,20 @@ namespace BusinessLayer.Services
             }
 
             return allAvailablesReservations;
+        }
+
+        private void GetStartHourAndEndHour(DaySchedule? day, out int startHour, out int endHour)
+        {
+            startHour = int.Parse(day.StartTime.Substring(0, 2));
+            endHour = int.Parse(day.EndTime.Substring(0, 2));
+        }
+
+        private Dictionary<GamingPlatform, int> GetUnavailablePlatformsAndTheirNumber(List<Reservation> unAvailableReservations)
+        {
+            return (from reservation in unAvailableReservations
+                    group reservation by reservation.GamingPlatform into g
+                    select new { GamingPlatform = g.Key, Count = g.Count() })
+                                            .ToDictionary(item => item.GamingPlatform, item => item.Count);
         }
 
         private AvailableReservation CreateNewAvailableReservation(int startHour, DateTime specificDay, string name, List<GamingPlatform> gamingPlatforms)
