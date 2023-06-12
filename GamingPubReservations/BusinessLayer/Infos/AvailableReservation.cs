@@ -1,4 +1,4 @@
-﻿namespace BusinessLayer.Dtos
+﻿namespace BusinessLayer.Infos
 {
     public class AvailableReservation
     {
@@ -8,6 +8,6 @@
 
         public string GamingPubName { get; set; }
 
-        public List<string> AvailableGamingPlatformsName { get; set; }
+        public List<GamingPlatformInfo> AvailableGamingPlatforms { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Dtos;
+using BusinessLayer.Infos;
 using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
@@ -128,23 +129,15 @@ namespace BusinessLayer.Services
 
                 if (unAvailableReservations.Count == 0)
                 {
-                    NoReservationsCase(specificDay, gamingPub, startHour, allAvailablesReservations);
+                    AvailableReservation availableReservation = NoReservationsCase(specificDay, gamingPub, startHour);
+
+                    allAvailablesReservations.Add(availableReservation);
                 }
                 else
                 {
-                    Dictionary<GamingPlatform, int> unAvailablePlatforms = GetUnavailablePlatformsAndTheirNumber(unAvailableReservations);
+                    AvailableReservation availableReservation = ReservationsCase(specificDay, gamingPub, startHour, unAvailableReservations);
 
-                    AvailableReservation availableReservation = CreateNewAvailableReservation(startHour, specificDay, gamingPub.Name, null);
-
-                    foreach (GamingPlatform gamingPlatform in gamingPub.GamingPlatforms)
-                    {
-                        if (!unAvailablePlatforms.ContainsKey(gamingPlatform))
-                        {
-                            availableReservation.AvailableGamingPlatformsName.Add(gamingPlatform.Name);
-                        }
-                    }
-
-                    if (availableReservation.AvailableGamingPlatformsName.Count != 0)
+                    if (availableReservation.AvailableGamingPlatforms.Count != 0)
                     {
                         allAvailablesReservations.Add(availableReservation);
                     }
@@ -156,11 +149,55 @@ namespace BusinessLayer.Services
             return allAvailablesReservations;
         }
 
-        private void NoReservationsCase(DateTime specificDay, GamingPub gamingPub, int startHour, List<AvailableReservation> allAvailablesReservations)
+        private AvailableReservation ReservationsCase(DateTime specificDay, GamingPub gamingPub, int startHour, List<Reservation> unAvailableReservations)
         {
-            AvailableReservation availableReservation = CreateNewAvailableReservation(startHour, specificDay, gamingPub.Name, gamingPub.GamingPlatforms.ToList());
+            Dictionary<GamingPlatform, int> unAvailablePlatforms = GetUnavailablePlatformsAndTheirNumber(unAvailableReservations);
 
-            allAvailablesReservations.Add(availableReservation);
+            AvailableReservation availableReservation = CreateNewAvailableReservation(startHour, specificDay, gamingPub.Name, null, gamingPub.Id);
+
+            foreach (GamingPlatform gamingPlatform in gamingPub.GamingPlatforms)
+            {
+                if (!unAvailablePlatforms.ContainsKey(gamingPlatform))
+                {
+                    ReservationsDontUseGamingPlatformCase(gamingPub, availableReservation, gamingPlatform);
+                }
+                else
+                {
+                    ReservationsUseGamingPlatformCase(gamingPub, unAvailablePlatforms, availableReservation, gamingPlatform);
+                }
+            }
+
+            return availableReservation;
+        }
+
+        private AvailableReservation NoReservationsCase(DateTime specificDay, GamingPub gamingPub, int startHour)
+        {
+            AvailableReservation availableReservation = CreateNewAvailableReservation(startHour, specificDay, gamingPub.Name, gamingPub.GamingPlatforms.ToList(), gamingPub.Id);
+
+            foreach (GamingPlatform gamingPlatform in gamingPub.GamingPlatforms)
+            {
+                int numberOfGamingPlatform = unitOfWork.GamingPlatforms.GetNumberOfGamingPlatforms(gamingPub.Id, gamingPlatform.Id);
+                availableReservation.AvailableGamingPlatforms.Add(new GamingPlatformInfo(gamingPlatform.Name, numberOfGamingPlatform));
+            }
+
+            return availableReservation;
+        }
+
+        private void ReservationsUseGamingPlatformCase(GamingPub gamingPub, Dictionary<GamingPlatform, int> unAvailablePlatforms, AvailableReservation availableReservation, GamingPlatform gamingPlatform)
+        {
+            int numberOfGamingPlatform = unitOfWork.GamingPlatforms.GetNumberOfGamingPlatforms(gamingPub.Id, gamingPlatform.Id);
+            numberOfGamingPlatform -= unAvailablePlatforms[gamingPlatform];
+
+            if (numberOfGamingPlatform > 0)
+            {
+                availableReservation.AvailableGamingPlatforms.Add(new GamingPlatformInfo(gamingPlatform.Name, numberOfGamingPlatform));
+            }
+        }
+
+        private void ReservationsDontUseGamingPlatformCase(GamingPub gamingPub, AvailableReservation availableReservation, GamingPlatform gamingPlatform)
+        {
+            int numberOfGamingPlatform = unitOfWork.GamingPlatforms.GetNumberOfGamingPlatforms(gamingPub.Id, gamingPlatform.Id);
+            availableReservation.AvailableGamingPlatforms.Add(new GamingPlatformInfo(gamingPlatform.Name, numberOfGamingPlatform));
         }
 
         private void GetStartHourAndEndHour(DaySchedule? day, out int startHour, out int endHour)
@@ -177,7 +214,7 @@ namespace BusinessLayer.Services
                                             .ToDictionary(item => item.GamingPlatform, item => item.Count);
         }
 
-        private AvailableReservation CreateNewAvailableReservation(int startHour, DateTime specificDay, string name, List<GamingPlatform> gamingPlatforms)
+        private AvailableReservation CreateNewAvailableReservation(int startHour, DateTime specificDay, string name, List<GamingPlatform> gamingPlatforms, int gamingPubId)
         {
             DateTime availableStartDate = new DateTime(specificDay.Year, specificDay.Month, specificDay.Day, startHour, 0, 0);
             DateTime availableEndDate = new DateTime(specificDay.Year, specificDay.Month, specificDay.Day, startHour + 1, 0, 0);
@@ -187,7 +224,7 @@ namespace BusinessLayer.Services
                 StartDate = availableStartDate,
                 EndDate = availableEndDate,
                 GamingPubName = name,
-                AvailableGamingPlatformsName = gamingPlatforms?.Select(p => p.Name).ToList() ?? new List<string>()
+                AvailableGamingPlatforms = new List<GamingPlatformInfo>()
             };
 
             return availableReservation;

@@ -28,6 +28,6 @@ namespace DataAccessLayer
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<GamingPlatform> GamingPlatforms { get; set; }
-        public DbSet<GamingPubGamingPlatform> GamingPubGamingPlatforms { get; }
+        public DbSet<GamingPubGamingPlatform> GamingPubGamingPlatforms { get; set; }
     }
 }

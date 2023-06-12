@@ -16,5 +16,15 @@ namespace DataAccessLayer.Repositories
 
             return foundGamingPub.GamingPlatforms.ToList();
         }
+
+        public int GetNumberOfGamingPlatforms(int gamingPubId, int gamingPlatformId)
+        {
+            var gamingPubGamingPlatform = _dbContext.GamingPubGamingPlatforms
+                .FirstOrDefault(gpg =>
+                    gpg.GamingPubId == gamingPubId &&
+                    gpg.GamingPlatformId == gamingPlatformId);
+
+            return gamingPubGamingPlatform?.Number ?? 0;
+        }
     }
 }
