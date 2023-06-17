@@ -36,5 +36,13 @@ namespace DataAccessLayer.Repositories
                                         .SelectMany(gp => gp.Reservations.Where(r => r.StartDate.Date == date.Date))
                                         .ToList();
         }
+
+        public List<Reservation> GetAllReservationsFromSpecificDateAndHour(DateTime date, GamingPub gamingPub)
+        {
+            return _dbContext.GamingPubs.Where(gp => gp.Id == gamingPub.Id)
+                                        .Include(r => r.Reservations)
+                                        .SelectMany(gp => gp.Reservations.Where(r => r.StartDate.Date == date.Date && r.StartDate.Hour == date.Hour))
+                                        .ToList();
+        }
     }
 }

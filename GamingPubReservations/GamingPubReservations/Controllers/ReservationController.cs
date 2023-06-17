@@ -24,7 +24,7 @@ namespace GamingPubReservations.Controllers
             {
                 return Ok("Reservation added");
             }
-            return BadRequest($"Reservation wasn't added because gaming pub with id {addReservationDto.GamingPubId} doesn't exist or PlatformId is invalid");
+            return BadRequest();
         }
 
         [HttpPut("update/{reservationId}")]

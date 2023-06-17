@@ -17,20 +17,56 @@ namespace BusinessLayer.Services
 
         public bool AddReservation(AddOrUpdateReservationDto addReservationDto)
         {
-            var foundGamingPub = unitOfWork.GamingPubs.GetById(addReservationDto.GamingPubId);
+            #region AddReservationValidation
+
+            GamingPub foundGamingPub = unitOfWork.GamingPubs.GetById(addReservationDto.GamingPubId);
 
             if (foundGamingPub == null)
             {
                 return false;
             }
 
-            var foundGamingPlatform = unitOfWork.GamingPlatforms.GetById(addReservationDto.GamingPlatformId);
+            GamingPlatform foundGamingPlatform = unitOfWork.GamingPlatforms.GetById(addReservationDto.GamingPlatformId);
 
             if (foundGamingPlatform == null)
             {
                 return false;
             }
 
+            int totalNumberOfSpecificGamingPlatformFromGamingPub = unitOfWork.GamingPlatforms.GetNumberOfGamingPlatforms(foundGamingPub.Id, foundGamingPlatform.Id);
+
+            List<Reservation> reservationsAtSpecificHour = unitOfWork.Reservations.GetAllReservationsFromSpecificDateAndHour(addReservationDto.StartDate, foundGamingPub);
+
+            if (reservationsAtSpecificHour.Count != 0)
+            {
+                bool hasUserReservationAtSpecificHour = reservationsAtSpecificHour.Where(x => x.UserId == addReservationDto.UserId).Count() == 0;
+
+                int unavailableSpecificPlatformNumber = reservationsAtSpecificHour.Where(reservation => reservation.GamingPlatformId == addReservationDto.GamingPlatformId).Count();
+
+                if (totalNumberOfSpecificGamingPlatformFromGamingPub - unavailableSpecificPlatformNumber <= 0 || !hasUserReservationAtSpecificHour)
+                {
+                    return false;
+                }
+
+                AddReservationIntoDatabase(addReservationDto, foundGamingPub, foundGamingPlatform);
+
+                return true;
+            }
+
+            if (totalNumberOfSpecificGamingPlatformFromGamingPub == 0)
+            {
+                return false;
+            }
+
+            #endregion
+
+            AddReservationIntoDatabase(addReservationDto, foundGamingPub, foundGamingPlatform);
+
+            return true;
+        }
+
+        private void AddReservationIntoDatabase(AddOrUpdateReservationDto addReservationDto, GamingPub foundGamingPub, GamingPlatform foundGamingPlatform)
+        {
             Reservation reservation = addReservationDto.ToReservation();
 
             reservation.GamingPub = foundGamingPub;
@@ -39,12 +75,12 @@ namespace BusinessLayer.Services
             unitOfWork.Reservations.Insert(reservation);
 
             unitOfWork.SaveChanges();
-
-            return true;
         }
 
         public bool UpdateReservation(AddOrUpdateReservationDto updateReservationDto, int reservationId)
         {
+            #region UpdateReservationValidation
+
             Reservation foundReservation = unitOfWork.Reservations.GetById(reservationId);
 
             if (foundReservation == null)
@@ -60,6 +96,15 @@ namespace BusinessLayer.Services
                 return false;
             }
 
+            #endregion
+
+            EditReservationIntoDatabase(updateReservationDto, foundReservation, foundGamingPub, foundGamingPlatform);
+
+            return true;
+        }
+
+        private void EditReservationIntoDatabase(AddOrUpdateReservationDto updateReservationDto, Reservation foundReservation, GamingPub foundGamingPub, GamingPlatform foundGamingPlatform)
+        {
             Reservation updatedReservation = updateReservationDto.ToReservation();
 
             updatedReservation.Copy(foundReservation);
@@ -68,18 +113,20 @@ namespace BusinessLayer.Services
             foundReservation.GamingPlatform = foundGamingPlatform;
 
             unitOfWork.SaveChanges();
-
-            return true;
         }
 
         public bool DeleteReservation(int reservationId)
         {
+            #region DeleteReservationValidation
+
             var foundReservation = unitOfWork.Reservations.GetById(reservationId);
 
             if (foundReservation == null)
             {
                 return false;
             }
+
+            #endregion
 
             unitOfWork.Reservations.Remove(foundReservation);
 
