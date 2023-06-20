@@ -50,13 +50,13 @@ namespace GamingPubReservations.Controllers
         [HttpGet("availables_by_date/{date}/{gamingPubId}")]
         public ActionResult<List<AvailableReservation>> GetAvailableReservationsByDate([FromRoute] DateTime date, [FromRoute] int gamingPubId)
         {
-            return _reservationService.GetByDate(date, gamingPubId);
+            return _reservationService.GetAvailablesByDate(date, gamingPubId);
         }
 
         [HttpGet("availables_by_date_and_platform/{date}/{gamingPlatformId}/{gamingPubId}")]
         public ActionResult<List<AvailableReservation>> GetAvailableReservationsByDate([FromRoute] DateTime date, [FromRoute] int gamingPlatformId, [FromRoute] int gamingPubId)
         {
-            return _reservationService.GetByDateAndPlatform(date, gamingPlatformId, gamingPubId);
+            return _reservationService.GetAvailablesByDateAndPlatform(date, gamingPlatformId, gamingPubId);
         }
 
         [HttpGet("all_reservations")]
@@ -66,5 +66,16 @@ namespace GamingPubReservations.Controllers
             return Ok(reservations);
         }
 
+        [HttpGet("by_date/{date}/{gamingPubId}")]
+        public ActionResult<List<ReservationInfo>> GetReservationsInfoByDate([FromRoute] DateTime date, [FromRoute] int gamingPubId)
+        {
+            return _reservationService.GetByDate(date, gamingPubId);
+        }
+
+        [HttpGet("by_range_of_days/{startDate}/{endDate}/{gamingPubId}")]
+        public ActionResult<List<ReservationInfo>> GetReservationsInfoByDate([FromRoute] DateTime startDate, [FromRoute] DateTime endDate, [FromRoute] int gamingPubId)
+        {
+            return _reservationService.GetByRange(startDate, endDate, gamingPubId);
+        }
     }
 }

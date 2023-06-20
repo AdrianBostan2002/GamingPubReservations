@@ -136,7 +136,7 @@ namespace BusinessLayer.Services
             return true;
         }
 
-        public List<AvailableReservation> GetByDate(DateTime date, int gamingPubId)
+        public List<AvailableReservation> GetAvailablesByDate(DateTime date, int gamingPubId)
         {
             var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
 
@@ -278,35 +278,83 @@ namespace BusinessLayer.Services
             return availableReservation;
         }
 
-        public List<AvailableReservation> GetByDateAndPlatform(DateTime date, int gamingPlatformId, int gamingPubId)
+        public List<AvailableReservation> GetAvailablesByDateAndPlatform(DateTime date, int gamingPlatformId, int gamingPubId)
         {
-            var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
-
-            foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
-
-            foundGamingPub.GamingPlatforms = unitOfWork.GamingPlatforms.GetByGamingPub(foundGamingPub);
-
-            foundGamingPub.Reservations = unitOfWork.Reservations.GetAllReservationsFromSpecificDate(date, foundGamingPub);
-
             var foundGamingPlatform = unitOfWork.GamingPlatforms.GetById(gamingPlatformId);
 
-            if
-            (
-                foundGamingPub == null || foundGamingPub.Schedule == null ||
-                foundGamingPub.GamingPlatforms.Count == 0 || foundGamingPlatform == null
-            )
+            if (foundGamingPlatform == null)
             {
-                return null;
+                return new List<AvailableReservation>();
             }
 
-            List<AvailableReservation> availableReservations = GetAvailableReservationFromSpecificDay(date, foundGamingPub);
+            List<AvailableReservation> availableReservations = GetAvailablesByDate(date, gamingPubId);
 
-            var availableReservationsWhichContainGamingPlatformId = availableReservations
+            if (availableReservations.Count != 0)
+            {
+                var availableReservationsWhichContainGamingPlatformId = availableReservations
                                                                     .Where(reservation => reservation.AvailableGamingPlatforms
                                                                     .Any(gamingPlatform => gamingPlatform.Name.Equals(foundGamingPlatform.Name)))
                                                                     .ToList();
 
-            return availableReservationsWhichContainGamingPlatformId;
+                return availableReservationsWhichContainGamingPlatformId;
+
+            }
+
+            return availableReservations;
+        }
+
+        public List<ReservationInfo> GetByDate(DateTime date, int gamingPubId)
+        {
+            var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
+
+            List<ReservationInfo> allReservationsByDate = new List<ReservationInfo>();
+
+            if (foundGamingPub == null)
+            {
+                return allReservationsByDate;
+            }
+
+            foundGamingPub.Reservations = unitOfWork.Reservations.GetAllReservationsFromSpecificDate(date, foundGamingPub);
+
+            CreateReservationsInfo(foundGamingPub, allReservationsByDate);
+
+            return allReservationsByDate;
+        }
+
+        private void CreateReservationsInfo(GamingPub foundGamingPub, List<ReservationInfo> reservationsInfo)
+        {
+            foreach (Reservation reservation in foundGamingPub.Reservations)
+            {
+                reservationsInfo.Add
+                    (
+                        new ReservationInfo
+                        {
+                            UserId = reservation.UserId,
+                            StartDate = reservation.StartDate,
+                            EndDate = reservation.EndDate,
+                            GamingPlatformId = reservation.GamingPlatformId,
+                            GamingPubId = reservation.GamingPubId
+                        }
+                    );
+            }
+        }
+
+        public List<ReservationInfo> GetByRange(DateTime startTime, DateTime endTime, int gamingPubId)
+        {
+            var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
+
+            List<ReservationInfo> allReservationsByRange = new List<ReservationInfo>();
+
+            if (foundGamingPub == null || startTime.Date > endTime.Date)
+            {
+                return allReservationsByRange;
+            }
+
+            foundGamingPub.Reservations = unitOfWork.Reservations.GetAllReservationsFromSpecificRange(startTime, endTime, foundGamingPub);
+
+            CreateReservationsInfo(foundGamingPub, allReservationsByRange);
+
+            return allReservationsByRange;
         }
     }
 }
