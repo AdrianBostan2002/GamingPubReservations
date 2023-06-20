@@ -7,6 +7,8 @@ namespace BusinessLayer.Services
 {
     public class ScheduleService
     {
+        private const string CLOSED_SCHEDULE = "Closed";
+
         private readonly UnitOfWork unitOfWork;
 
         public ScheduleService(UnitOfWork unitOfWork)
@@ -32,6 +34,11 @@ namespace BusinessLayer.Services
 
             List<DaySchedule> schedule = addScheduleDto.ToSchedule();
 
+            if (!CheckIfScheduleHasValidStartTimeAndEndTime(schedule))
+            {
+                return false;
+            }
+
             SetGamingPubForEveryDayInSchedule(schedule, foundGamingPub);
 
             foreach (DaySchedule day in schedule)
@@ -49,14 +56,14 @@ namespace BusinessLayer.Services
             var sourceGamingPub = unitOfWork.GamingPubs.GetById(sourceGamingPubId);
             var destinationGamingPub = unitOfWork.GamingPubs.GetById(destinationGamingPubId);
 
-            if(sourceGamingPub == null || destinationGamingPub == null)
+            if (sourceGamingPub == null || destinationGamingPub == null)
             {
                 return false;
             }
 
             sourceGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(sourceGamingPubId);
-            
-            if(sourceGamingPub.Schedule.Count == 0)
+
+            if (sourceGamingPub.Schedule.Count == 0)
             {
                 return false;
             }
@@ -80,6 +87,11 @@ namespace BusinessLayer.Services
             foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
 
             DaySchedule updatedDay = updateDayDto.ToDaySchedule();
+
+            if (!CheckIfStartTimeAndEndTimeAreValid(updatedDay.StartTime, updatedDay.EndTime))
+            {
+                return false;
+            }
 
             DaySchedule foundDay = foundGamingPub.Schedule.Where(d => d.Day == updatedDay.Day).FirstOrDefault();
 
@@ -137,6 +149,33 @@ namespace BusinessLayer.Services
 
                 day.GamingPubs.Add(gamingPub);
             }
+        }
+
+        private bool CheckIfScheduleHasValidStartTimeAndEndTime(List<DaySchedule> schedule)
+        {
+            foreach (var day in schedule)
+            {
+                if (!CheckIfStartTimeAndEndTimeAreValid(day.StartTime, day.EndTime))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool CheckIfStartTimeAndEndTimeAreValid(string startTime, string endTime)
+        {
+            if
+            (
+               TimeSpan.TryParse(startTime, out _) && TimeSpan.TryParse(endTime, out _) ||
+               startTime.Equals(CLOSED_SCHEDULE, StringComparison.InvariantCultureIgnoreCase) && endTime.Equals(CLOSED_SCHEDULE, StringComparison.InvariantCultureIgnoreCase)
+            )
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
