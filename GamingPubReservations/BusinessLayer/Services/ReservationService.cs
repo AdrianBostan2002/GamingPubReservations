@@ -3,6 +3,7 @@ using BusinessLayer.Infos;
 using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
+using System.Collections.Generic;
 
 namespace BusinessLayer.Services
 {
@@ -275,6 +276,37 @@ namespace BusinessLayer.Services
             };
 
             return availableReservation;
+        }
+
+        public List<AvailableReservation> GetByDateAndPlatform(DateTime date, int gamingPlatformId, int gamingPubId)
+        {
+            var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
+
+            foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
+
+            foundGamingPub.GamingPlatforms = unitOfWork.GamingPlatforms.GetByGamingPub(foundGamingPub);
+
+            foundGamingPub.Reservations = unitOfWork.Reservations.GetAllReservationsFromSpecificDate(date, foundGamingPub);
+
+            var foundGamingPlatform = unitOfWork.GamingPlatforms.GetById(gamingPlatformId);
+
+            if
+            (
+                foundGamingPub == null || foundGamingPub.Schedule == null ||
+                foundGamingPub.GamingPlatforms.Count == 0 || foundGamingPlatform == null
+            )
+            {
+                return null;
+            }
+
+            List<AvailableReservation> availableReservations = GetAvailableReservationFromSpecificDay(date, foundGamingPub);
+
+            var availableReservationsWhichContainGamingPlatformId = availableReservations
+                                                                    .Where(reservation => reservation.AvailableGamingPlatforms
+                                                                    .Any(gamingPlatform => gamingPlatform.Name.Equals(foundGamingPlatform.Name)))
+                                                                    .ToList();
+
+            return availableReservationsWhichContainGamingPlatformId;
         }
     }
 }

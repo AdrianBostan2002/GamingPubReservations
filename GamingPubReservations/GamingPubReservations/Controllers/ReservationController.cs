@@ -53,6 +53,12 @@ namespace GamingPubReservations.Controllers
             return _reservationService.GetByDate(date, gamingPubId);
         }
 
+        [HttpGet("availables_by_date_and_platform/{date}/{gamingPlatformId}/{gamingPubId}")]
+        public ActionResult<List<AvailableReservation>> GetAvailableReservationsByDate([FromRoute] DateTime date, [FromRoute] int gamingPlatformId, [FromRoute] int gamingPubId)
+        {
+            return _reservationService.GetByDateAndPlatform(date, gamingPlatformId, gamingPubId);
+        }
+
         [HttpGet("all_reservations")]
         public ActionResult<List<Reservation>> GetAllReservations()
         {
