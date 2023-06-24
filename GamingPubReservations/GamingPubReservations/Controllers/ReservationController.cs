@@ -62,13 +62,12 @@ namespace GamingPubReservations.Controllers
             return BadRequest($"Reservation wasn't deleted because reservation with id {reservationId} doesn't exist");
         }
 
-        //TODO: FIX after merge
-        //[HttpGet("by-id/{id}/{gamingPubId}")]
-        //[Authorize(Roles = "Admin")]
-        //public ActionResult<ReservationInfo> GetById(int id, int gamingPubId)
-        //{
-        //    return _reservationService.GetById(id, gamingPubId);
-        //}
+        [HttpGet("by-id/{id}")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<ReservationInfo> GetById(int id)
+        {
+            return _reservationService.GetById(id);
+        }
 
         [HttpGet("availables_by_date/{date}/{gamingPubId}")]
         [Authorize(Roles = "Admin, Customer")]
