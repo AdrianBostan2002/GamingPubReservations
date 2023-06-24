@@ -1,6 +1,9 @@
 ﻿using BusinessLayer.Dtos;
 using BusinessLayer.Services;
+using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace GamingPubReservations.Controllers
 {
@@ -16,6 +19,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPost("schedule")]
+        [Authorize(Roles = "Admin")]
         public IActionResult PostNewSchedule([FromBody] AddScheduleDto addScheduleDto)
         {
             if (_scheduleService.AddSchedule(addScheduleDto))
@@ -26,6 +30,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPost("schedule/{sourceGamingPubId}/{destinationGamingPubId}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddSameScheduleForDifferentGamingPub(int sourceGamingPubId, int destinationGamingPubId)
         {
             if (_scheduleService.AddSameScheduleForDifferentGamingPub(sourceGamingPubId, destinationGamingPubId))
@@ -37,6 +42,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPut("update_day/{gamingPubId}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateDay([FromBody] AddOrUpdateDayScheduleDto updateDayScheduleDto, [FromRoute] int gamingPubId)
         {
             if (_scheduleService.UpdateDaySchedule(updateDayScheduleDto, gamingPubId))
@@ -47,6 +53,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpDelete("schedule/{gamingPubId}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteSchedule([FromRoute] int gamingPubId)
         {
             if (_scheduleService.DeleteSchedule(gamingPubId))
@@ -57,6 +64,13 @@ namespace GamingPubReservations.Controllers
             {
                 return BadRequest("GamingPub doesn't have any schedule");
             }
+        }
+
+        [HttpGet("schedule/{gamingPubId}")]
+        //[Authorize(Roles = "Admin, Customer")]
+        public ActionResult<List<DaySchedule>> GetSchedule([FromRoute] int gamingPubId)
+        {
+            return Ok(_scheduleService.GetSchedule(gamingPubId));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Dtos;
+using BusinessLayer.Infos;
 using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
@@ -49,14 +50,14 @@ namespace BusinessLayer.Services
             var sourceGamingPub = unitOfWork.GamingPubs.GetById(sourceGamingPubId);
             var destinationGamingPub = unitOfWork.GamingPubs.GetById(destinationGamingPubId);
 
-            if(sourceGamingPub == null || destinationGamingPub == null)
+            if (sourceGamingPub == null || destinationGamingPub == null)
             {
                 return false;
             }
 
             sourceGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(sourceGamingPubId);
-            
-            if(sourceGamingPub.Schedule.Count == 0)
+
+            if (sourceGamingPub.Schedule.Count == 0)
             {
                 return false;
             }
@@ -137,6 +138,27 @@ namespace BusinessLayer.Services
 
                 day.GamingPubs.Add(gamingPub);
             }
+        }
+
+        public List<DayScheduleInfo> GetSchedule(int gamingPubId)
+        {
+            GamingPub foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
+
+            List<DayScheduleInfo> schedule = new List<DayScheduleInfo>();
+
+            if(foundGamingPub== null)
+            {
+                return schedule;
+            }
+
+            foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
+
+            foreach (var day in foundGamingPub.Schedule)
+            {
+                schedule.Add(day.ToDayScheduleInfo());
+            }
+
+            return schedule;
         }
     }
 }
