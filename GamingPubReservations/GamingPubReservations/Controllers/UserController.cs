@@ -36,7 +36,7 @@ namespace GamingPubReservations.Controllers
             return BadRequest("User is not in list of users");
         }
 
-        [HttpPut("update_user_name")]
+        [HttpPut("update_user")]
         [Authorize(Roles = "Admin")]
         public ActionResult UpdateUser([FromBody] UpdateUserDto user)
         {

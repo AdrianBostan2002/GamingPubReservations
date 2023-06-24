@@ -19,12 +19,16 @@ namespace BusinessLayer.Services
         public List<User> GetAll()
         {
             var customers = unitOfWork.Users.GetAll();
+            foreach (var user in customers)
+            {
+                user.Adress = unitOfWork.Address.GetById(user.AdressId);
+            }
             return customers;
         }
 
         public bool Register(RegisterDto registerUser)
         {
-            var foundUser = unitOfWork.Users.GetUserByFirstNameAndLastName(registerUser.FirstName, registerUser.LastName);
+            var foundUser = unitOfWork.Users.GetUserByEmail(registerUser.Email);
 
             var passwordHash = authorizationService.HashPassword(registerUser.Password);
 
@@ -66,28 +70,63 @@ namespace BusinessLayer.Services
         public bool RemoveUserById(RemoveUserDto customer)
         {
             var foundUser = unitOfWork.Users.GetUserById(customer.Id);
-
+            foundUser.Adress = unitOfWork.Address.GetById(foundUser.AdressId);
             if (foundUser != null)
             {
                 unitOfWork.Users.RemoveUser(foundUser);
+                unitOfWork.SaveChanges();
                 return true;
             }
 
             return false;
         }
 
-        public bool UpdateUser(UpdateUserDto customer)
+        public bool UpdateUser(UpdateUserDto updatedUser)
         {
-            if (!string.IsNullOrEmpty(customer.Name))
+            var foundUser = unitOfWork.Users.GetUserById(updatedUser.Id);
+            if (foundUser == null)
             {
-                var foundUser = unitOfWork.Users.GetUserById(customer.Id);
-                if (foundUser != null)
-                {
-                    foundUser.FirstName = customer.Name;
-                    return true;
-                }
+                return false;
             }
-            return false;
+            var otherUser = unitOfWork.Users.GetUserByEmail(updatedUser.Email);
+            if (otherUser != null)
+            {
+                return false;
+            }
+            var foundAdress = unitOfWork.Address.GetById(foundUser.AdressId);
+
+            if (!string.IsNullOrEmpty(updatedUser.FirstName))
+            {
+                foundUser.FirstName = updatedUser.FirstName;
+            }
+            if (!string.IsNullOrEmpty(updatedUser.LastName))
+            {
+                foundUser.LastName = updatedUser.LastName;
+            }
+            if (!string.IsNullOrEmpty(updatedUser.PhoneNumber))
+            {
+                foundUser.PhoneNumber = updatedUser.PhoneNumber;
+            }
+            if (!string.IsNullOrEmpty(updatedUser.Password))
+            {
+                var passwordHash = authorizationService.HashPassword(updatedUser.Password);
+                foundUser.PasswordHash = passwordHash;
+            }
+            if (!string.IsNullOrEmpty(updatedUser.Email))
+            {
+                foundUser.Email = updatedUser.Email;
+            }
+            if (updatedUser.WillUpdateAdress)
+            {
+                foundAdress.Country = updatedUser.AddAdressDto.Country;
+                foundAdress.City = updatedUser.AddAdressDto.City;
+                foundAdress.Street = updatedUser.AddAdressDto.Street;
+                foundAdress.ZipCode = updatedUser.AddAdressDto.ZipCode;
+                foundAdress.Number = updatedUser.AddAdressDto.Number;
+            }
+
+            unitOfWork.SaveChanges();
+            return true;
         }
     }
 }
