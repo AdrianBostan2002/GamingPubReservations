@@ -5,9 +5,9 @@ namespace BusinessLayer.Mapping
 {
     public static class AddressMappingExtensions
     {
-        public static Adress ToAddress(this AddAddressDto addressDto)
+        public static Address ToAddress(this AddAddressDto addressDto)
         {
-            Adress address = new Adress
+            Address address = new Address
             {
                 Country = addressDto.Country,
                 City = addressDto.City,

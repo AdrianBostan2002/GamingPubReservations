@@ -53,13 +53,36 @@ namespace BusinessLayer.Services
 
             if (gamingPubDto.AddAdressDto != null)
             {
-                foundGamingPub.Adress = gamingPubDto.AddAdressDto.ToAddress();
+                foundGamingPub.Address = gamingPubDto.AddAdressDto.ToAddress();
             }
 
             if (!string.IsNullOrEmpty(gamingPubDto.PhoneNumber))
             {
                 foundGamingPub.PhoneNumber = gamingPubDto.PhoneNumber;
             }
+
+            unitOfWork.SaveChanges();
+
+            return true;
+        }
+
+        public bool DeleteGamingPub(int gamingPubId)
+        {
+            var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
+
+            if (foundGamingPub == null)
+            {
+                return false;
+            }
+
+            //TODO: Fix this
+            //foundGamingPub.Adress = unitOfWork.Address.GetById(foundGamingPub.AdressId);
+
+            //unitOfWork.Address.Remove(foundGamingPub.Adress);
+
+            //foundGamingPub.Reservations = unitOfWork.Reservations.GetAllReservations(foundGamingPub);
+
+            //unitOfWork.GamingPubs.Remove(foundGamingPub);
 
             unitOfWork.SaveChanges();
 
