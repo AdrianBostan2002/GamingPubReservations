@@ -147,18 +147,17 @@ namespace BusinessLayer.Services
             return true;
         }
 
-        //public ReservationInfo GetById(int id)
-        //{
-            //TODO: Fix after merge
-            //Reservation reservation = unitOfWork.Reservations.GetById(id);
+        public ReservationInfo GetById(int id)
+        {
+            Reservation reservation = unitOfWork.Reservations.GetById(id);
 
-            //if (reservation == null)
-            //{
-            //    return new ReservationInfo();
-            //}
+            if (reservation == null)
+            {
+                return new ReservationInfo();
+            }
 
-            //ReservationInfo reservationInfo = reservation;
-        //}
+            return reservation.ToReservationInfo();
+        }
 
         public List<AvailableReservation> GetAvailablesByDate(DateTime date, int gamingPubId)
         {
@@ -349,17 +348,7 @@ namespace BusinessLayer.Services
         {
             foreach (Reservation reservation in foundGamingPub.Reservations)
             {
-                reservationsInfo.Add
-                    (
-                        new ReservationInfo
-                        {
-                            UserId = reservation.UserId,
-                            StartDate = reservation.StartDate,
-                            EndDate = reservation.EndDate,
-                            GamingPlatformId = reservation.GamingPlatformId,
-                            GamingPubId = reservation.GamingPubId
-                        }
-                    );
+                reservationsInfo.Add(reservation.ToReservationInfo());
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Dtos;
+using BusinessLayer.Infos;
 using DataAccessLayer.Entities;
 
 namespace BusinessLayer.Mapping
@@ -14,6 +15,18 @@ namespace BusinessLayer.Mapping
                 GamingPlatformId = reservationDto.GamingPlatformId,
                 GamingPubId = reservationDto.GamingPubId,
                 UserId = reservationDto.UserId,
+            };
+        }
+
+        public static ReservationInfo ToReservationInfo(this Reservation reservation)
+        {
+            return new ReservationInfo
+            {
+                UserId = reservation.UserId,
+                StartDate = reservation.StartDate,
+                EndDate = reservation.EndDate,
+                GamingPlatformId = reservation.GamingPlatformId,
+                GamingPubId = reservation.GamingPubId
             };
         }
 
