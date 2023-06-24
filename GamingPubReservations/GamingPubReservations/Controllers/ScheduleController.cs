@@ -3,12 +3,11 @@ using BusinessLayer.Services;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace GamingPubReservations.Controllers
 {
     [ApiController]
-    [Route("api/")]
+    [Route("[controller]/")]
     public class ScheduleController : ControllerBase
     {
         private ScheduleService _scheduleService;
@@ -67,7 +66,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpGet("schedule/{gamingPubId}")]
-        //[Authorize(Roles = "Admin, Customer")]
+        [Authorize(Roles = "Admin, Customer")]
         public ActionResult<List<DaySchedule>> GetSchedule([FromRoute] int gamingPubId)
         {
             return Ok(_scheduleService.GetSchedule(gamingPubId));

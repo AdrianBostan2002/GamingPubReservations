@@ -2,6 +2,7 @@
 using BusinessLayer.Infos;
 using BusinessLayer.Services;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamingPubReservations.Controllers
@@ -18,6 +19,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPost("add")]
+        [Authorize(Roles = "Admin, Customer")]
         public IActionResult PostNewReservation(AddOrUpdateReservationDto addReservationDto)
         {
             if (_reservationService.AddReservation(addReservationDto))
@@ -28,6 +30,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPut("update/{reservationId}")]
+        [Authorize(Roles = "Admin, Customer")]
         public IActionResult UpdateReservation([FromBody] AddOrUpdateReservationDto updateReservationDto, [FromRoute] int reservationId)
         {
             if (_reservationService.UpdateReservation(updateReservationDto, reservationId))
@@ -38,6 +41,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpDelete("delete/{reservationId}")]
+        [Authorize(Roles = "Admin, Customer")]
         public IActionResult DeleteReservation([FromRoute] int reservationId)
         {
             if (_reservationService.DeleteReservation(reservationId))
@@ -48,18 +52,21 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpGet("availables_by_date/{date}/{gamingPubId}")]
+        [Authorize(Roles = "Admin, Customer")]
         public ActionResult<List<AvailableReservation>> GetAvailableReservationsByDate([FromRoute] DateTime date, [FromRoute] int gamingPubId)
         {
             return _reservationService.GetAvailablesByDate(date, gamingPubId);
         }
 
         [HttpGet("availables_by_date_and_platform/{date}/{gamingPlatformId}/{gamingPubId}")]
+        [Authorize(Roles = "Admin, Customer")]
         public ActionResult<List<AvailableReservation>> GetAvailableReservationsByDate([FromRoute] DateTime date, [FromRoute] int gamingPlatformId, [FromRoute] int gamingPubId)
         {
             return _reservationService.GetAvailablesByDateAndPlatform(date, gamingPlatformId, gamingPubId);
         }
 
         [HttpGet("all_reservations")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<List<Reservation>> GetAllReservations()
         {
             var reservations = _reservationService.GetAll();
@@ -67,11 +74,13 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpGet("by_date/{date}/{gamingPubId}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<List<ReservationInfo>> GetReservationsInfoByDate([FromRoute] DateTime date, [FromRoute] int gamingPubId)
         {
             return _reservationService.GetByDate(date, gamingPubId);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("by_range_of_days/{startDate}/{endDate}/{gamingPubId}")]
         public ActionResult<List<ReservationInfo>> GetReservationsInfoByDate([FromRoute] DateTime startDate, [FromRoute] DateTime endDate, [FromRoute] int gamingPubId)
         {
