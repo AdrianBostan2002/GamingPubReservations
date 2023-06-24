@@ -17,7 +17,7 @@ namespace GamingPubReservations.Controllers
             _userService = userService;
         }
 
-        [HttpGet("all_users")]
+        [HttpGet("all-users")]
         [Authorize(Roles = "Admin")]
         public ActionResult<List<User>> GetAllUsers()
         {
@@ -25,7 +25,7 @@ namespace GamingPubReservations.Controllers
             return Ok(users);
         }
 
-        [HttpDelete("delete_user")]
+        [HttpDelete("delete")]
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteUserById([FromBody] RemoveDto user)
         {
@@ -36,7 +36,7 @@ namespace GamingPubReservations.Controllers
             return BadRequest("User is not in list of users");
         }
 
-        [HttpPut("update_user")]
+        [HttpPut("update")]
         [Authorize(Roles = "Admin")]
         public ActionResult UpdateUser([FromBody] UpdateUserDto user)
         {

@@ -16,14 +16,14 @@ namespace GamingPubReservations.Controllers
             _gamingPlatformService = gamingPlatformService;
         }
 
-        [HttpGet("all_gaming_platforms")]
+        [HttpGet("all-gaming-platforms")]
         [Authorize(Roles = "Admin, Customer")]
         public ActionResult<List<GamingPlatform>> GetAllGamingPubs()
         {
             return Ok(_gamingPlatformService.GetAll());
         }
 
-        [HttpPost("add_gaming_platform")]
+        [HttpPost("add")]
         [Authorize(Roles = "Admin")]
         public ActionResult PostNewPlatform([FromBody] AddGamingPlatformDto gamingPlatform)
         {
@@ -34,7 +34,7 @@ namespace GamingPubReservations.Controllers
             return BadRequest("Gaming platform already exists");
         }
 
-        [HttpDelete("remove_gaming_platform")]
+        [HttpDelete("delete")]
         [Authorize(Roles = "Admin")]
         public ActionResult RemovePlatform([FromBody] RemoveDto gamingPlatform)
         {
@@ -45,7 +45,7 @@ namespace GamingPubReservations.Controllers
             return BadRequest("Gaming platform not found");
         }
 
-        [HttpPut("update_gaming_platform")]
+        [HttpPut("update")]
         [Authorize(Roles = "Admin")]
         public ActionResult UpdatePlatform([FromBody] UpdateGamingPlatformDto gamingPlatform)
         {

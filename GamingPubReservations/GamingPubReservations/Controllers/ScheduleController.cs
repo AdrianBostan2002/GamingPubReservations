@@ -17,7 +17,7 @@ namespace GamingPubReservations.Controllers
             _scheduleService = scheduleService;
         }
 
-        [HttpPost("schedule")]
+        [HttpPost("add")]
         [Authorize(Roles = "Admin")]
         public IActionResult PostNewSchedule([FromBody] AddScheduleDto addScheduleDto)
         {
@@ -28,7 +28,7 @@ namespace GamingPubReservations.Controllers
             return BadRequest("Gaming Pub doesn't exist or it has already a schedule");
         }
 
-        [HttpPost("schedule/{sourceGamingPubId}/{destinationGamingPubId}")]
+        [HttpPost("add-same-as-another-schedule/{sourceGamingPubId}/{destinationGamingPubId}")]
         [Authorize(Roles = "Admin")]
         public IActionResult AddSameScheduleForDifferentGamingPub(int sourceGamingPubId, int destinationGamingPubId)
         {
@@ -40,7 +40,7 @@ namespace GamingPubReservations.Controllers
                 $"or Source Gaming Pub doesn't have a schedule");
         }
 
-        [HttpPut("update_day/{gamingPubId}")]
+        [HttpPut("update-day/{gamingPubId}")]
         [Authorize(Roles = "Admin")]
         public IActionResult UpdateDay([FromBody] AddOrUpdateDayScheduleDto updateDayScheduleDto, [FromRoute] int gamingPubId)
         {
@@ -51,7 +51,7 @@ namespace GamingPubReservations.Controllers
             return BadRequest($"GamingPub with id {gamingPubId} doesn't exist");
         }
 
-        [HttpDelete("schedule/{gamingPubId}")]
+        [HttpDelete("delete/{gamingPubId}")]
         [Authorize(Roles = "Admin")]
         public IActionResult DeleteSchedule([FromRoute] int gamingPubId)
         {
@@ -65,7 +65,7 @@ namespace GamingPubReservations.Controllers
             }
         }
 
-        [HttpGet("schedule/{gamingPubId}")]
+        [HttpGet("get/{gamingPubId}")]
         [Authorize(Roles = "Admin, Customer")]
         public ActionResult<List<DaySchedule>> GetSchedule([FromRoute] int gamingPubId)
         {
