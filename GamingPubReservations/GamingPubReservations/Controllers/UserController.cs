@@ -34,7 +34,7 @@ namespace GamingPubReservations.Controllers
             return BadRequest("User is not in list of users");
         }
 
-        [HttpPut("update_user_name")]
+        [HttpPut("update_user")]
         public ActionResult PutUpdateUser([FromBody] UpdateUserDto user)
         {
             if(_userService.UpdateUser(user))
