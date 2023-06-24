@@ -2,7 +2,7 @@
 
 namespace DataAccessLayer.Repositories
 {
-    public class UsersRepository : RepositoryBase<User>
+    public class UsersRepository: RepositoryBase<User>
     {
         public UsersRepository(AppDbContext appDbContext) : base(appDbContext) { }
 
@@ -25,7 +25,7 @@ namespace DataAccessLayer.Repositories
 
         public User GetUserByEmail(string email)
         {
-            var result = _dbContext.Users.FirstOrDefault(x => x.Email == email);
+            var result = _dbContext.Users.FirstOrDefault(x=>x.Email == email);
             return result;
         }
 

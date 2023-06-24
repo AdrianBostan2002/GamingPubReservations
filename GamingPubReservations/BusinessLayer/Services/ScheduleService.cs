@@ -158,7 +158,7 @@ namespace BusinessLayer.Services
 
             List<DayScheduleInfo> schedule = new List<DayScheduleInfo>();
 
-            if (foundGamingPub == null)
+            if(foundGamingPub== null)
             {
                 return schedule;
             }
@@ -173,7 +173,7 @@ namespace BusinessLayer.Services
             return schedule;
 
         }
-
+      
         private bool CheckIfScheduleHasValidStartTimeAndEndTime(List<DaySchedule> schedule)
         {
             foreach (var day in schedule)

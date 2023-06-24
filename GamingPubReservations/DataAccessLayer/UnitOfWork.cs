@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Repositories;
+﻿using DataAccessLayer.Entities;
+using DataAccessLayer.Repositories;
 
 namespace DataAccessLayer
 {
@@ -9,7 +10,7 @@ namespace DataAccessLayer
         public ReservationsRepository Reservations { get; }
         public AddressRepository Address { get; }
         public ScheduleRepository Schedule { get; }
-        public GamingPlatformRepository GamingPlatforms { get; }
+        public GamingPlatformRepository GamingPlatforms {get;}
 
         private readonly AppDbContext _dbContext;
 
