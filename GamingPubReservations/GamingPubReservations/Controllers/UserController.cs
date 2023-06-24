@@ -27,7 +27,7 @@ namespace GamingPubReservations.Controllers
 
         [HttpDelete("delete_user")]
         [Authorize(Roles = "Admin")]
-        public ActionResult DeleteUserById([FromBody] RemoveUserDto user)
+        public ActionResult DeleteUserById([FromBody] RemoveDto user)
         {
             if(_userService.RemoveUserById(user))
             {

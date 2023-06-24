@@ -1,6 +1,6 @@
 ﻿namespace BusinessLayer.Dtos
 {
-    public class RemoveUserDto
+    public class RemoveDto
     {
         public int Id { get; set; }
     }

@@ -67,7 +67,7 @@ namespace BusinessLayer.Services
             }
         }
 
-        public bool RemoveUserById(RemoveUserDto customer)
+        public bool RemoveUserById(RemoveDto customer)
         {
             var foundUser = unitOfWork.Users.GetUserById(customer.Id);
             foundUser.Adress = unitOfWork.Address.GetById(foundUser.AdressId);

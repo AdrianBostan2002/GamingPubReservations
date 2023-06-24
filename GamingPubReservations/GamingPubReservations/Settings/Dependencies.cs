@@ -24,6 +24,7 @@ namespace GamingPubReservations.Settings
             services.AddScoped<ReservationService>();
             services.AddScoped<GamingPubService>();
             services.AddScoped<ScheduleService>();
+            services.AddScoped<GamingPlatformService>();
         }
 
         private static void AddRepositories(IServiceCollection services)
