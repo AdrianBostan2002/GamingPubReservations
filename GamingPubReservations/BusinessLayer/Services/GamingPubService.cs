@@ -16,7 +16,18 @@ namespace BusinessLayer.Services
 
         public List<GamingPub> GetAll()
         {
-            return unitOfWork.GamingPubs.GetAll();
+            var gamingPubs = unitOfWork.GamingPubs.GetAll();
+            foreach (var pub in gamingPubs)
+            {
+                pub.Address = unitOfWork.Address.GetById(pub.AddressId);
+            }
+            return gamingPubs;
+        }
+
+        public Address GetAddress(int id) 
+        { 
+            var pub = unitOfWork.GamingPubs.GetById(id);
+            return unitOfWork.Address.GetById(pub.AddressId);
         }
 
         public bool AddGamingPub(AddGamingPubDto gamingPubDto)

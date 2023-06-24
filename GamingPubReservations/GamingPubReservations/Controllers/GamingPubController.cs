@@ -23,6 +23,13 @@ namespace GamingPubReservations.Controllers
             return Ok(_gamingPubService.GetAll());
         }
 
+        [HttpGet("gaming-pub-adress-by-id/{id}")]
+        [Authorize(Roles = "Admin, Customer")]
+        public ActionResult<Address> GetAdress([FromRoute] int id)
+        {
+            return Ok(_gamingPubService.GetAddress(id));
+        }
+
         [HttpPost("add")]
         [Authorize(Roles = "Admin")]
         public IActionResult AddNewPub([FromBody] AddGamingPubDto gamingPub)

@@ -31,7 +31,7 @@ namespace BusinessLayer.Services
             return true;
         }
 
-        public bool RemovePlatformById(RemoveDto platform)
+        public bool RemovePlatformById(IdDto platform)
         {
             var foundPlatform = unitOfWork.GamingPlatforms.GetById(platform.Id);
             if (foundPlatform == null)

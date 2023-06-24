@@ -18,7 +18,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPost("add")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult PostNewSchedule([FromBody] AddScheduleDto addScheduleDto)
         {
             if (_scheduleService.AddSchedule(addScheduleDto))
