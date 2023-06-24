@@ -23,7 +23,7 @@ namespace BusinessLayer.Services
         {
             var foundGamingPub = unitOfWork.GamingPubs.GetPubByName(gamingPubDto.Name);
 
-            if(foundGamingPub != null) 
+            if (foundGamingPub != null)
             {
                 return false;
             }
@@ -31,6 +31,35 @@ namespace BusinessLayer.Services
             GamingPub newGamingPub = gamingPubDto.ToGamingPub();
 
             unitOfWork.GamingPubs.Insert(newGamingPub);
+
+            unitOfWork.SaveChanges();
+
+            return true;
+        }
+
+        public bool UpdateGamingPub(int gamingPubId, UpdateGamingPubDto gamingPubDto)
+        {
+            var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
+
+            if (foundGamingPub == null)
+            {
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(gamingPubDto.Name))
+            {
+                foundGamingPub.Name = gamingPubDto.Name;
+            }
+
+            if (gamingPubDto.AddAdressDto != null)
+            {
+                foundGamingPub.Adress = gamingPubDto.AddAdressDto.ToAddress();
+            }
+
+            if (!string.IsNullOrEmpty(gamingPubDto.PhoneNumber))
+            {
+                foundGamingPub.PhoneNumber = gamingPubDto.PhoneNumber;
+            }
 
             unitOfWork.SaveChanges();
 

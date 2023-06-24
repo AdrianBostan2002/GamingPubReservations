@@ -110,12 +110,12 @@ namespace BusinessLayer.Services
 
             #endregion
 
-            EditReservationIntoDatabase(updateReservationDto, foundReservation, foundGamingPub, foundGamingPlatform);
+            UpdateReservationIntoDatabase(updateReservationDto, foundReservation, foundGamingPub, foundGamingPlatform);
 
             return true;
         }
 
-        private void EditReservationIntoDatabase(AddOrUpdateReservationDto updateReservationDto, Reservation foundReservation, GamingPub foundGamingPub, GamingPlatform foundGamingPlatform)
+        private void UpdateReservationIntoDatabase(AddOrUpdateReservationDto updateReservationDto, Reservation foundReservation, GamingPub foundGamingPub, GamingPlatform foundGamingPlatform)
         {
             Reservation updatedReservation = updateReservationDto.ToReservation();
 
