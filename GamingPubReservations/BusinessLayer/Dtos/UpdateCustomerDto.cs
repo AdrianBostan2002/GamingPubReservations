@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DataAccessLayer.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusinessLayer.Dtos
 {
