@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Dtos;
+using BusinessLayer.Infos;
 using DataAccessLayer.Entities;
 
 namespace BusinessLayer.Mapping
@@ -34,6 +35,17 @@ namespace BusinessLayer.Mapping
                 StartTime = dayScheduleDto.StartTime,
                 EndTime = dayScheduleDto.EndTime,
                 SpecialDate = dayScheduleDto.SpecialDate
+            };
+        }
+
+        public static DayScheduleInfo ToDayScheduleInfo(this DaySchedule daySchedule)
+        {
+            return new DayScheduleInfo
+            {
+                Day = daySchedule.Day,
+                StartTime = daySchedule.StartTime,
+                EndTime = daySchedule.EndTime,
+                SpecialDate = daySchedule.SpecialDate
             };
         }
     }

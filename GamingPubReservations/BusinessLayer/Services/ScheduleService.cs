@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Dtos;
+using BusinessLayer.Dtos;
+using BusinessLayer.Infos;
 using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
@@ -151,6 +152,28 @@ namespace BusinessLayer.Services
             }
         }
 
+        public List<DayScheduleInfo> GetSchedule(int gamingPubId)
+        {
+            GamingPub foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
+
+            List<DayScheduleInfo> schedule = new List<DayScheduleInfo>();
+
+            if(foundGamingPub== null)
+            {
+                return schedule;
+            }
+
+            foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
+
+            foreach (var day in foundGamingPub.Schedule)
+            {
+                schedule.Add(day.ToDayScheduleInfo());
+            }
+
+            return schedule;
+
+        }
+      
         private bool CheckIfScheduleHasValidStartTimeAndEndTime(List<DaySchedule> schedule)
         {
             foreach (var day in schedule)

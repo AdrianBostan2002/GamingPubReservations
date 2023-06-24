@@ -1,16 +1,11 @@
 ﻿using DataAccessLayer.Entities;
 using DataAccessLayer.Enums;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
@@ -30,13 +25,13 @@ namespace BusinessLayer.Services
         public string GetToken(User user, RoleType role)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
-            
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_securityKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            
-            var roleClaim = new Claim("role", role.ToString());
+
+            var roleClaim = new Claim(ClaimTypes.Role, role.ToString());
             var idClaim = new Claim("id", user.Id.ToString());
-            var infoClaim = new Claim("email",user.Email);
+            var infoClaim = new Claim("email", user.Email);
 
             var tokenDescriptior = new SecurityTokenDescriptor
             {
