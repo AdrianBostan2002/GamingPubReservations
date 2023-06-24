@@ -29,7 +29,7 @@ namespace GamingPubReservations.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteUserById([FromBody] RemoveDto user)
         {
-            if(_userService.RemoveUserById(user))
+            if (_userService.RemoveUserById(user))
             {
                 return Ok("User deleted");
             }
@@ -40,7 +40,7 @@ namespace GamingPubReservations.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult UpdateUser([FromBody] UpdateUserDto user)
         {
-            if(_userService.UpdateUser(user))
+            if (_userService.UpdateUser(user))
             {
                 return Ok("User updated");
             }
@@ -66,7 +66,7 @@ namespace GamingPubReservations.Controllers
         public IActionResult Login([FromBody] LoginDto loginData)
         {
             var jwtToken = _userService.ValidateLogin(loginData);
-            if(jwtToken == null)
+            if (jwtToken == null)
             {
                 return BadRequest("Wrong email or password");
             }

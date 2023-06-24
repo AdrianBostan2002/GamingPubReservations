@@ -7,7 +7,7 @@ namespace DataAccessLayer
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           // string configurationString = ConfigurationManager.ConnectionStrings["MsSqlServerConnectionString"].ConnectionString;
+            // string configurationString = ConfigurationManager.ConnectionStrings["MsSqlServerConnectionString"].ConnectionString;
 
             optionsBuilder
                 .UseSqlServer("Data Source=DESKTOP-UUC8F51;Server=localhost;Database=GamingPubsDatabase;Persist Security Info=True;User ID=adi123;Password=123;TrustServerCertificate=True;TrustServerCertificate=True")
