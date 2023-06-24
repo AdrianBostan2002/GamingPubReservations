@@ -30,6 +30,11 @@ namespace BusinessLayer.Services
 
             GamingPub newGamingPub = gamingPubDto.ToGamingPub();
 
+            if (newGamingPub.Address != null)
+            {
+                unitOfWork.Address.Insert(newGamingPub.Address);
+            }
+
             unitOfWork.GamingPubs.Insert(newGamingPub);
 
             unitOfWork.SaveChanges();
@@ -75,14 +80,15 @@ namespace BusinessLayer.Services
                 return false;
             }
 
-            //TODO: Fix this
-            //foundGamingPub.Adress = unitOfWork.Address.GetById(foundGamingPub.AdressId);
+            if (foundGamingPub.AddressId.HasValue)
+            {
+                foundGamingPub.Address = unitOfWork.Address.GetById(foundGamingPub.AddressId.Value);
+                unitOfWork.Address.Remove(foundGamingPub.Address);
+            }
 
-            //unitOfWork.Address.Remove(foundGamingPub.Adress);
+            foundGamingPub.Reservations = unitOfWork.Reservations.GetAllReservations(foundGamingPub);
 
-            //foundGamingPub.Reservations = unitOfWork.Reservations.GetAllReservations(foundGamingPub);
-
-            //unitOfWork.GamingPubs.Remove(foundGamingPub);
+            unitOfWork.GamingPubs.Remove(foundGamingPub);
 
             unitOfWork.SaveChanges();
 

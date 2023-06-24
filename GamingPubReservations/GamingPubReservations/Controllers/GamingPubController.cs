@@ -24,7 +24,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPost("add")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddNewPub([FromBody] AddGamingPubDto gamingPub)
         {
             if (_gamingPubService.AddGamingPub(gamingPub))
@@ -46,7 +46,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpDelete("delete/{gamingPubId}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteGamingPub([FromRoute] int gamingPubId)
         {
             if (_gamingPubService.DeleteGamingPub(gamingPubId))
