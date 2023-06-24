@@ -16,7 +16,7 @@ namespace BusinessLayer.Mapping
             return new GamingPub
             {
                 Name = addGamingPubDto.Name,
-                Adress = addGamingPubDto.AddAdressDto.ToAddress(),
+                Address = addGamingPubDto.AddAdressDto.ToAddress(),
                 PhoneNumber = addGamingPubDto.PhoneNumber
             };
         }

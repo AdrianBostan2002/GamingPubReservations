@@ -16,7 +16,7 @@ namespace BusinessLayer.Mapping
                 PasswordHash = registerDto.Password,
                 PhoneNumber = registerDto.PhoneNumber,
                 Role = registerDto.Role,
-                Adress = registerDto.AddAdressDto.ToAddress()
+                Address = registerDto.AddAdressDto.ToAddress()
             };
         }
     }

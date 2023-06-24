@@ -16,8 +16,8 @@ namespace DataAccessLayer.Entities
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
 
-        public int AdressId { get; set; }
-        public Adress Adress { get; set; }
+        public int? AddressId { get; set; }
+        public Address? Address { get; set; }
 
         public string PasswordHash { get; set; }
 

@@ -21,7 +21,7 @@ namespace BusinessLayer.Services
             var customers = unitOfWork.Users.GetAll();
             foreach (var user in customers)
             {
-                user.Adress = unitOfWork.Address.GetById(user.AdressId);
+                user.Address = user.AddressId.HasValue ? unitOfWork.Address.GetById(user.AddressId.Value) : null;
             }
             return customers;
         }
@@ -70,7 +70,7 @@ namespace BusinessLayer.Services
         public bool RemoveUserById(RemoveDto customer)
         {
             var foundUser = unitOfWork.Users.GetUserById(customer.Id);
-            foundUser.Adress = unitOfWork.Address.GetById(foundUser.AdressId);
+            foundUser.Address = foundUser.AddressId.HasValue ? unitOfWork.Address.GetById(foundUser.AddressId.Value) : null;
             if (foundUser != null)
             {
                 unitOfWork.Users.RemoveUser(foundUser);
@@ -93,7 +93,7 @@ namespace BusinessLayer.Services
             {
                 return false;
             }
-            var foundAdress = unitOfWork.Address.GetById(foundUser.AdressId);
+            var foundAdress = foundUser.AddressId.HasValue ? unitOfWork.Address.GetById(foundUser.AddressId.Value) : null;
 
             if (!string.IsNullOrEmpty(updatedUser.FirstName))
             {

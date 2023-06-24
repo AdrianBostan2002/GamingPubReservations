@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GamingPubReservations.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]/")]
     [ApiController]
     public class GamingPubController : ControllerBase
     {
@@ -16,22 +16,44 @@ namespace GamingPubReservations.Controllers
             _gamingPubService = gamingPubService;
         }
 
-        [HttpGet("all_gaming_pubs")]
+        [HttpGet("all-gaming-pubs")]
         [Authorize(Roles = "Admin, Customer")]
         public ActionResult<List<GamingPub>> GetAllGamingPubs()
         {
             return Ok(_gamingPubService.GetAll());
         }
 
-        [HttpPost("add_gaming_pub")]
+        [HttpPost("add")]
         [Authorize(Roles = "Admin")]
-        public ActionResult PostNewPub([FromBody] AddGamingPubDto gamingPub)
+        public IActionResult AddNewPub([FromBody] AddGamingPubDto gamingPub)
         {
             if (_gamingPubService.AddGamingPub(gamingPub))
             {
                 return Ok("Gaming pub added");
             }
             return BadRequest("Gaming pub already exists");
+        }
+
+        [HttpPost("update/{gamingPubId}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult UpdateGamingPub([FromRoute] int gamingPubId, [FromBody] UpdateGamingPubDto updateGamingPub)
+        {
+            if (_gamingPubService.UpdateGamingPub(gamingPubId, updateGamingPub))
+            {
+                return Ok("Gaming pub updated");
+            }
+            return BadRequest("Gaming pub was not updated");
+        }
+
+        [HttpDelete("delete/{gamingPubId}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteGamingPub([FromRoute] int gamingPubId)
+        {
+            if (_gamingPubService.DeleteGamingPub(gamingPubId))
+            {
+                return Ok("Gaming pub updated");
+            }
+            return BadRequest("Gaming pub was not updated");
         }
     }
 }
