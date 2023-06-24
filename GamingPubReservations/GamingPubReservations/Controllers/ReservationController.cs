@@ -2,7 +2,9 @@
 using BusinessLayer.Infos;
 using BusinessLayer.Services;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GamingPubReservations.Controllers
 {
@@ -18,9 +20,15 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult PostNewReservation(AddOrUpdateReservationDto addReservationDto)
+        [Authorize(Roles = "Admin, Customer")]
+        public IActionResult AddNewReservation(AddOrUpdateReservationDto addReservationDto)
         {
-            if (_reservationService.AddReservation(addReservationDto))
+            int idClaim;
+            string roleClaim;
+
+            GetIdAndRole(out idClaim, out roleClaim);
+
+            if (_reservationService.AddReservation(addReservationDto, roleClaim, idClaim))
             {
                 return Ok("Reservation added");
             }
@@ -28,9 +36,15 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPut("update/{reservationId}")]
+        [Authorize(Roles = "Admin, Customer")]
         public IActionResult UpdateReservation([FromBody] AddOrUpdateReservationDto updateReservationDto, [FromRoute] int reservationId)
         {
-            if (_reservationService.UpdateReservation(updateReservationDto, reservationId))
+            int idClaim;
+            string roleClaim;
+
+            GetIdAndRole(out idClaim, out roleClaim);
+
+            if (_reservationService.UpdateReservation(updateReservationDto, reservationId, roleClaim, idClaim))
             {
                 return Ok("Reservation updated");
             }
@@ -38,6 +52,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpDelete("delete/{reservationId}")]
+        [Authorize(Roles = "Admin, Customer")]
         public IActionResult DeleteReservation([FromRoute] int reservationId)
         {
             if (_reservationService.DeleteReservation(reservationId))
@@ -47,19 +62,29 @@ namespace GamingPubReservations.Controllers
             return BadRequest($"Reservation wasn't deleted because reservation with id {reservationId} doesn't exist");
         }
 
+        [HttpGet("by-id/{id}")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult<ReservationInfo> GetById(int id)
+        {
+            return _reservationService.GetById(id);
+        }
+
         [HttpGet("availables_by_date/{date}/{gamingPubId}")]
+        [Authorize(Roles = "Admin, Customer")]
         public ActionResult<List<AvailableReservation>> GetAvailableReservationsByDate([FromRoute] DateTime date, [FromRoute] int gamingPubId)
         {
             return _reservationService.GetAvailablesByDate(date, gamingPubId);
         }
 
         [HttpGet("availables_by_date_and_platform/{date}/{gamingPlatformId}/{gamingPubId}")]
+        [Authorize(Roles = "Admin, Customer")]
         public ActionResult<List<AvailableReservation>> GetAvailableReservationsByDate([FromRoute] DateTime date, [FromRoute] int gamingPlatformId, [FromRoute] int gamingPubId)
         {
             return _reservationService.GetAvailablesByDateAndPlatform(date, gamingPlatformId, gamingPubId);
         }
 
         [HttpGet("all_reservations")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<List<Reservation>> GetAllReservations()
         {
             var reservations = _reservationService.GetAll();
@@ -67,15 +92,23 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpGet("by_date/{date}/{gamingPubId}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<List<ReservationInfo>> GetReservationsInfoByDate([FromRoute] DateTime date, [FromRoute] int gamingPubId)
         {
             return _reservationService.GetByDate(date, gamingPubId);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("by_range_of_days/{startDate}/{endDate}/{gamingPubId}")]
         public ActionResult<List<ReservationInfo>> GetReservationsInfoByDate([FromRoute] DateTime startDate, [FromRoute] DateTime endDate, [FromRoute] int gamingPubId)
         {
             return _reservationService.GetByRange(startDate, endDate, gamingPubId);
+        }
+
+        private void GetIdAndRole(out int idClaim, out string roleClaim)
+        {
+            idClaim = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "id").Value);
+            roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
         }
     }
 }

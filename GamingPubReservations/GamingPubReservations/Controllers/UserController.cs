@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GamingPubReservations.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]/")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -18,6 +18,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpGet("all_users")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<List<User>> GetAllUsers()
         {
             var users = _userService.GetAll();
@@ -25,6 +26,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpDelete("delete_user")]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteUserById([FromBody] RemoveUserDto user)
         {
             if(_userService.RemoveUserById(user))
@@ -35,7 +37,8 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPut("update_user")]
-        public ActionResult PutUpdateUser([FromBody] UpdateUserDto user)
+        [Authorize(Roles = "Admin")]
+        public ActionResult UpdateUser([FromBody] UpdateUserDto user)
         {
             if(_userService.UpdateUser(user))
             {

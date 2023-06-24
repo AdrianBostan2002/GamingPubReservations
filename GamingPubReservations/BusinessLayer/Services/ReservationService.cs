@@ -3,7 +3,6 @@ using BusinessLayer.Infos;
 using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
-using System.Collections.Generic;
 
 namespace BusinessLayer.Services
 {
@@ -16,8 +15,10 @@ namespace BusinessLayer.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public bool AddReservation(AddOrUpdateReservationDto addReservationDto)
+        public bool AddReservation(AddOrUpdateReservationDto addReservationDto, string role, int userId)
         {
+            CheckUserIsCustomer(addReservationDto, role, userId);
+
             #region AddReservationValidation
 
             GamingPub foundGamingPub = unitOfWork.GamingPubs.GetById(addReservationDto.GamingPubId);
@@ -66,6 +67,14 @@ namespace BusinessLayer.Services
             return true;
         }
 
+        private void CheckUserIsCustomer(AddOrUpdateReservationDto addReservationDto, string role, int userId)
+        {
+            if (role.Equals("Customer", StringComparison.InvariantCultureIgnoreCase))
+            {
+                addReservationDto.UserId = userId;
+            }
+        }
+
         private void AddReservationIntoDatabase(AddOrUpdateReservationDto addReservationDto, GamingPub foundGamingPub, GamingPlatform foundGamingPlatform)
         {
             Reservation reservation = addReservationDto.ToReservation();
@@ -78,8 +87,10 @@ namespace BusinessLayer.Services
             unitOfWork.SaveChanges();
         }
 
-        public bool UpdateReservation(AddOrUpdateReservationDto updateReservationDto, int reservationId)
+        public bool UpdateReservation(AddOrUpdateReservationDto updateReservationDto, int reservationId, string role, int userId)
         {
+            CheckUserIsCustomer(updateReservationDto, role, userId);
+
             #region UpdateReservationValidation
 
             Reservation foundReservation = unitOfWork.Reservations.GetById(reservationId);
@@ -134,6 +145,18 @@ namespace BusinessLayer.Services
             unitOfWork.SaveChanges();
 
             return true;
+        }
+
+        public ReservationInfo GetById(int id)
+        {
+            Reservation reservation = unitOfWork.Reservations.GetById(id);
+
+            if (reservation == null)
+            {
+                return new ReservationInfo();
+            }
+
+            return reservation.ToReservationInfo();
         }
 
         public List<AvailableReservation> GetAvailablesByDate(DateTime date, int gamingPubId)
@@ -325,17 +348,7 @@ namespace BusinessLayer.Services
         {
             foreach (Reservation reservation in foundGamingPub.Reservations)
             {
-                reservationsInfo.Add
-                    (
-                        new ReservationInfo
-                        {
-                            UserId = reservation.UserId,
-                            StartDate = reservation.StartDate,
-                            EndDate = reservation.EndDate,
-                            GamingPlatformId = reservation.GamingPlatformId,
-                            GamingPubId = reservation.GamingPubId
-                        }
-                    );
+                reservationsInfo.Add(reservation.ToReservationInfo());
             }
         }
 
