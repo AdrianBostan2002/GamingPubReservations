@@ -1,5 +1,4 @@
 ﻿using DataAccessLayer.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.Repositories
 {

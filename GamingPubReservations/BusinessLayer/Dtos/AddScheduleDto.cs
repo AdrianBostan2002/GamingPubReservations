@@ -1,6 +1,4 @@
-﻿using DataAccessLayer.Entities;
-
-namespace BusinessLayer.Dtos
+﻿namespace BusinessLayer.Dtos
 {
     public class AddScheduleDto
     {

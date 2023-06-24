@@ -21,7 +21,7 @@ namespace BusinessLayer.Services
         public bool AddGamingPlatform(AddGamingPlatformDto gamingPlatform)
         {
             var foundPlatform = unitOfWork.GamingPlatforms.GetAll().Where(x => x.Name == gamingPlatform.Name).FirstOrDefault();
-            if(foundPlatform != null) 
+            if (foundPlatform != null)
             {
                 return false;
             }
@@ -34,11 +34,11 @@ namespace BusinessLayer.Services
         public bool RemovePlatformById(RemoveDto platform)
         {
             var foundPlatform = unitOfWork.GamingPlatforms.GetById(platform.Id);
-            if(foundPlatform == null)
+            if (foundPlatform == null)
             {
                 return false;
             }
-//also remove links to gaming pubs
+            //also remove links to gaming pubs
             unitOfWork.GamingPlatforms.Remove(foundPlatform);
             unitOfWork.SaveChanges();
             return true;

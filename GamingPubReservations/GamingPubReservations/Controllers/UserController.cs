@@ -17,7 +17,7 @@ namespace GamingPubReservations.Controllers
             _userService = userService;
         }
 
-        [HttpGet("all_users")]
+        [HttpGet("all-users")]
         [Authorize(Roles = "Admin")]
         public ActionResult<List<User>> GetAllUsers()
         {
@@ -25,22 +25,22 @@ namespace GamingPubReservations.Controllers
             return Ok(users);
         }
 
-        [HttpDelete("delete_user")]
+        [HttpDelete("delete")]
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteUserById([FromBody] RemoveDto user)
         {
-            if(_userService.RemoveUserById(user))
+            if (_userService.RemoveUserById(user))
             {
                 return Ok("User deleted");
             }
             return BadRequest("User is not in list of users");
         }
 
-        [HttpPut("update_user")]
+        [HttpPut("update")]
         [Authorize(Roles = "Admin")]
         public ActionResult UpdateUser([FromBody] UpdateUserDto user)
         {
-            if(_userService.UpdateUser(user))
+            if (_userService.UpdateUser(user))
             {
                 return Ok("User updated");
             }
@@ -66,7 +66,7 @@ namespace GamingPubReservations.Controllers
         public IActionResult Login([FromBody] LoginDto loginData)
         {
             var jwtToken = _userService.ValidateLogin(loginData);
-            if(jwtToken == null)
+            if (jwtToken == null)
             {
                 return BadRequest("Wrong email or password");
             }
