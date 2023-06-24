@@ -4,6 +4,7 @@ using BusinessLayer.Services;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GamingPubReservations.Controllers
 {
@@ -20,9 +21,14 @@ namespace GamingPubReservations.Controllers
 
         [HttpPost("add")]
         [Authorize(Roles = "Admin, Customer")]
-        public IActionResult PostNewReservation(AddOrUpdateReservationDto addReservationDto)
+        public IActionResult AddNewReservation(AddOrUpdateReservationDto addReservationDto)
         {
-            if (_reservationService.AddReservation(addReservationDto))
+            int idClaim;
+            string roleClaim;
+
+            GetIdAndRole(out idClaim, out roleClaim);
+
+            if (_reservationService.AddReservation(addReservationDto, roleClaim, idClaim))
             {
                 return Ok("Reservation added");
             }
@@ -33,7 +39,12 @@ namespace GamingPubReservations.Controllers
         [Authorize(Roles = "Admin, Customer")]
         public IActionResult UpdateReservation([FromBody] AddOrUpdateReservationDto updateReservationDto, [FromRoute] int reservationId)
         {
-            if (_reservationService.UpdateReservation(updateReservationDto, reservationId))
+            int idClaim;
+            string roleClaim;
+
+            GetIdAndRole(out idClaim, out roleClaim);
+
+            if (_reservationService.UpdateReservation(updateReservationDto, reservationId, roleClaim, idClaim))
             {
                 return Ok("Reservation updated");
             }
@@ -85,6 +96,12 @@ namespace GamingPubReservations.Controllers
         public ActionResult<List<ReservationInfo>> GetReservationsInfoByDate([FromRoute] DateTime startDate, [FromRoute] DateTime endDate, [FromRoute] int gamingPubId)
         {
             return _reservationService.GetByRange(startDate, endDate, gamingPubId);
+        }
+
+        private void GetIdAndRole(out int idClaim, out string roleClaim)
+        {
+            idClaim = int.Parse(User.Claims.FirstOrDefault(c => c.Type == "id").Value);
+            roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
         }
     }
 }
