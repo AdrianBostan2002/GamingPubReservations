@@ -147,6 +147,19 @@ namespace BusinessLayer.Services
             return true;
         }
 
+        //public ReservationInfo GetById(int id)
+        //{
+            //TODO: Fix after merge
+            //Reservation reservation = unitOfWork.Reservations.GetById(id);
+
+            //if (reservation == null)
+            //{
+            //    return new ReservationInfo();
+            //}
+
+            //ReservationInfo reservationInfo = reservation;
+        //}
+
         public List<AvailableReservation> GetAvailablesByDate(DateTime date, int gamingPubId)
         {
             var foundGamingPub = unitOfWork.GamingPubs.GetById(gamingPubId);
