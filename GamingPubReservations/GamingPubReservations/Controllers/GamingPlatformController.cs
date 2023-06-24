@@ -36,7 +36,7 @@ namespace GamingPubReservations.Controllers
 
         [HttpDelete("delete")]
         [Authorize(Roles = "Admin")]
-        public ActionResult RemovePlatform([FromBody] RemoveDto gamingPlatform)
+        public ActionResult RemovePlatform([FromBody] IdDto gamingPlatform)
         {
             if (_gamingPlatformService.RemovePlatformById(gamingPlatform))
             {

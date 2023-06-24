@@ -18,7 +18,7 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpGet("all-users")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public ActionResult<List<User>> GetAllUsers()
         {
             var users = _userService.GetAll();
@@ -26,8 +26,8 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpDelete("delete")]
-        [Authorize(Roles = "Admin")]
-        public ActionResult DeleteUserById([FromBody] RemoveDto user)
+        //[Authorize(Roles = "Admin")]
+        public ActionResult DeleteUserById([FromBody] IdDto user)
         {
             if (_userService.RemoveUserById(user))
             {

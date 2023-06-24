@@ -17,14 +17,21 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpGet("all-gaming-pubs")]
-        [Authorize(Roles = "Admin, Customer")]
+        //[Authorize(Roles = "Admin, Customer")]
         public ActionResult<List<GamingPub>> GetAllGamingPubs()
         {
             return Ok(_gamingPubService.GetAll());
         }
 
+        [HttpGet("gaming-pub-adress-by-id/{id}")]
+        //[Authorize(Roles = "Admin, Customer")]
+        public ActionResult<Address> GetAdress(string id)
+        {
+            return Ok(_gamingPubService.GetAddress(id));
+        }
+
         [HttpPost("add")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult AddNewPub([FromBody] AddGamingPubDto gamingPub)
         {
             if (_gamingPubService.AddGamingPub(gamingPub))

@@ -19,6 +19,13 @@ namespace BusinessLayer.Services
             return unitOfWork.GamingPubs.GetAll();
         }
 
+        public Address GetAddress(string idString)
+        {
+            var id = Int32.Parse(idString);
+            var pub = unitOfWork.GamingPubs.GetById(id);
+            return unitOfWork.Address.GetById(pub.AddressId);
+        }
+
         public bool AddGamingPub(AddGamingPubDto gamingPubDto)
         {
             var foundGamingPub = unitOfWork.GamingPubs.GetPubByName(gamingPubDto.Name);

@@ -67,12 +67,16 @@ namespace BusinessLayer.Services
             }
         }
 
-        public bool RemoveUserById(RemoveDto customer)
+        public bool RemoveUserById(IdDto customer)
         {
             var foundUser = unitOfWork.Users.GetUserById(customer.Id);
-            foundUser.Address = foundUser.AddressId.HasValue ? unitOfWork.Address.GetById(foundUser.AddressId.Value) : null;
             if (foundUser != null)
             {
+                if (foundUser.AddressId.HasValue)
+                {
+                    foundUser.Address = unitOfWork.Address.GetById(foundUser.AddressId.Value);
+                    unitOfWork.Address.Remove(foundUser.Address);
+                }
                 unitOfWork.Users.RemoveUser(foundUser);
                 unitOfWork.SaveChanges();
                 return true;

@@ -14,8 +14,9 @@ namespace DataAccessLayer.Repositories
             _dbSet = dbContext.Set<T>();
         }
 
-        public T GetById(int id)
+        public T GetById(int? id)
         {
+            if (id == null) throw new ArgumentNullException();
             return _dbSet.FirstOrDefault(entity => entity.Id == id);
         }
 
