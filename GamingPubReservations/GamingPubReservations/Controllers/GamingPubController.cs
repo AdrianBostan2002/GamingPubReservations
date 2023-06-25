@@ -41,7 +41,7 @@ namespace GamingPubReservations.Controllers
             return BadRequest("Gaming pub already exists");
         }
 
-        [HttpPost("update/{gamingPubId}")]
+        [HttpPut("update/{gamingPubId}")]
         [Authorize(Roles = "Admin")]
         public IActionResult UpdateGamingPub([FromRoute] int gamingPubId, [FromBody] UpdateGamingPubDto updateGamingPub)
         {
