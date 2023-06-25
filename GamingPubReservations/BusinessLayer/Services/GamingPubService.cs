@@ -14,6 +14,13 @@ namespace BusinessLayer.Services
             this.unitOfWork = unitOfWork;
         }
 
+        public GamingPub GetPub(int id)
+        {
+            var pub = unitOfWork.GamingPubs.GetById(id);
+            pub.Address = unitOfWork.Address.GetById(pub.AddressId);
+            return pub;
+        }
+
         public List<GamingPub> GetAll()
         {
             var gamingPubs = unitOfWork.GamingPubs.GetAll();
@@ -22,12 +29,6 @@ namespace BusinessLayer.Services
                 pub.Address = unitOfWork.Address.GetById(pub.AddressId);
             }
             return gamingPubs;
-        }
-
-        public Address GetAddress(int id) 
-        { 
-            var pub = unitOfWork.GamingPubs.GetById(id);
-            return unitOfWork.Address.GetById(pub.AddressId);
         }
 
         public bool AddGamingPub(AddGamingPubDto gamingPubDto)

@@ -23,11 +23,11 @@ namespace GamingPubReservations.Controllers
             return Ok(_gamingPubService.GetAll());
         }
 
-        [HttpGet("gaming-pub-adress-by-id/{id}")]
+        [HttpGet("gaming-pub-by-id/{id}")]
         [Authorize(Roles = "Admin, Customer")]
-        public ActionResult<Address> GetAdress([FromRoute] int id)
+        public ActionResult<GamingPub> GetGamingPubById(int id)
         {
-            return Ok(_gamingPubService.GetAddress(id));
+            return Ok(_gamingPubService.GetPub(id));
         }
 
         [HttpPost("add")]
