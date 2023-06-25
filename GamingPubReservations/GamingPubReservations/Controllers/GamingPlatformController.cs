@@ -23,6 +23,13 @@ namespace GamingPubReservations.Controllers
             return Ok(_gamingPlatformService.GetAll());
         }
 
+        [HttpGet("get-platform-by-id/{id}")]
+        [Authorize(Roles = "Admin, Customer")]
+        public ActionResult<GamingPlatform> GetPlatformById(int id)
+        {
+            return Ok(_gamingPlatformService.GetPlatform(id));
+        }
+
         [HttpPost("add")]
         [Authorize(Roles = "Admin")]
         public ActionResult PostNewPlatform([FromBody] AddGamingPlatformDto gamingPlatform)

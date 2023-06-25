@@ -18,6 +18,11 @@ namespace BusinessLayer.Services
             return unitOfWork.GamingPlatforms.GetAll();
         }
 
+        public GamingPlatform GetPlatform(int id)
+        {
+            return unitOfWork.GamingPlatforms.GetById(id);
+        }
+
         public bool AddGamingPlatform(AddGamingPlatformDto gamingPlatform)
         {
             var foundPlatform = unitOfWork.GamingPlatforms.GetAll().Where(x => x.Name == gamingPlatform.Name).FirstOrDefault();
