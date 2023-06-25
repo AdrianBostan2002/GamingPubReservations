@@ -3,6 +3,7 @@ using BusinessLayer.Infos;
 using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
+using Infrastructure.Exceptions;
 
 namespace BusinessLayer.Services
 {
@@ -23,21 +24,21 @@ namespace BusinessLayer.Services
 
             if (foundGamingPub == null)
             {
-                return false;
+                throw new ResourceMissingException($"Gaming pub with id {addScheduleDto.GamingPubId} doesn't exist");
             }
 
             var foundSchedule = unitOfWork.Schedule.GetByGamingPubId(foundGamingPub.Id);
 
             if (foundSchedule.Count != 0)
             {
-                return false;
+                throw new ForbiddenException($"Gaming pub with id {addScheduleDto.GamingPubId} already has a schedule");
             }
 
             List<DaySchedule> schedule = addScheduleDto.ToSchedule();
 
             if (!CheckIfScheduleHasValidStartTimeAndEndTime(schedule))
             {
-                return false;
+                throw new ForbiddenException("Invalid schedule");
             }
 
             SetGamingPubForEveryDayInSchedule(schedule, foundGamingPub);
@@ -57,16 +58,21 @@ namespace BusinessLayer.Services
             var sourceGamingPub = unitOfWork.GamingPubs.GetById(sourceGamingPubId);
             var destinationGamingPub = unitOfWork.GamingPubs.GetById(destinationGamingPubId);
 
-            if (sourceGamingPub == null || destinationGamingPub == null)
+            if (sourceGamingPub == null)
             {
-                return false;
+                throw new ResourceMissingException($"Gaming pub with id {sourceGamingPubId} not found");
+            }
+
+            if (destinationGamingPub == null)
+            {
+                throw new ResourceMissingException($"Gaming pub with id {destinationGamingPubId} not found");
             }
 
             sourceGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(sourceGamingPubId);
 
             if (sourceGamingPub.Schedule.Count == 0)
             {
-                return false;
+                throw new ForbiddenException("Source gaming pub doesn't have a schedule");
             }
 
             destinationGamingPub.Schedule = new List<DaySchedule>(sourceGamingPub.Schedule);
@@ -82,7 +88,7 @@ namespace BusinessLayer.Services
 
             if (foundGamingPub == null)
             {
-                return false;
+                throw new ResourceMissingException($"Gaming pub with id {gamingPubId} not found");
             }
 
             foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
@@ -91,7 +97,7 @@ namespace BusinessLayer.Services
 
             if (!CheckIfStartTimeAndEndTimeAreValid(updatedDay.StartTime, updatedDay.EndTime))
             {
-                return false;
+                throw new ForbiddenException("Invalid start/end time");
             }
 
             DaySchedule foundDay = foundGamingPub.Schedule.Where(d => d.Day == updatedDay.Day).FirstOrDefault();
@@ -124,14 +130,14 @@ namespace BusinessLayer.Services
 
             if (foundGamingPub == null)
             {
-                return false;
+                throw new ResourceMissingException($"Gaming pub with id {gamingPubId} not found");
             }
 
             foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
 
             if (foundGamingPub.Schedule.Count == 0)
             {
-                return false;
+                throw new ResourceMissingException($"Gaming pub with id {gamingPubId} has no schedule to delete");
             }
 
             foundGamingPub.Schedule.Clear();
@@ -160,7 +166,7 @@ namespace BusinessLayer.Services
 
             if (foundGamingPub == null)
             {
-                return schedule;
+                throw new ResourceMissingException($"Gaming pub with id {gamingPubId} not found");
             }
 
             foundGamingPub.Schedule = unitOfWork.Schedule.GetByGamingPubId(gamingPubId);
@@ -180,7 +186,7 @@ namespace BusinessLayer.Services
             {
                 if (!CheckIfStartTimeAndEndTimeAreValid(day.StartTime, day.EndTime))
                 {
-                    return false;
+                    throw new ForbiddenException("Invalid start/end time");
                 }
             }
 

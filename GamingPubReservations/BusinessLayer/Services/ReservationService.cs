@@ -3,6 +3,7 @@ using BusinessLayer.Infos;
 using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
+using Infrastructure.Exceptions;
 
 namespace BusinessLayer.Services
 {
@@ -135,7 +136,7 @@ namespace BusinessLayer.Services
 
             if (foundReservation == null)
             {
-                return false;
+                throw new ResourceMissingException($"Reservation with id {reservationId} not found");
             }
 
             #endregion
