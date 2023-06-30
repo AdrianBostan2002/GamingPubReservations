@@ -23,7 +23,7 @@ namespace GamingPubReservations.Controllers
             return Ok(_gamingPubService.GetAll());
         }
 
-        [HttpGet("gaming-pub-by-id/{id}")]
+        [HttpGet("get/{id}")]
         [Authorize(Roles = "Admin, Customer")]
         public ActionResult<GamingPub> GetGamingPubById(int id)
         {

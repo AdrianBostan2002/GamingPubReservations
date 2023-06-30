@@ -25,6 +25,13 @@ namespace GamingPubReservations.Controllers
             return Ok(users);
         }
 
+        [HttpGet("get/{id}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult GetUser([FromRoute] int id)
+        {
+            return Ok(_userService.GetById(id));
+        }
+
         [HttpDelete("delete")]
         [Authorize(Roles = "Admin")]
         public ActionResult DeleteUserById([FromBody] IdDto user)

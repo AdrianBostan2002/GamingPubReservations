@@ -26,6 +26,11 @@ namespace BusinessLayer.Services
             return customers;
         }
 
+        public User GetById(int id)
+        {
+            return unitOfWork.Users.GetById(id);
+        }
+
         public bool Register(RegisterDto registerUser)
         {
             var foundUser = unitOfWork.Users.GetUserByEmail(registerUser.Email);

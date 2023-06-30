@@ -23,7 +23,7 @@ namespace GamingPubReservations.Controllers
             return Ok(_gamingPlatformService.GetAll());
         }
 
-        [HttpGet("get-platform-by-id/{id}")]
+        [HttpGet("get/{id}")]
         [Authorize(Roles = "Admin, Customer")]
         public ActionResult<GamingPlatform> GetPlatformById(int id)
         {
