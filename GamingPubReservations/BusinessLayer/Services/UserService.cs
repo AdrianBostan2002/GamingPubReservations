@@ -2,6 +2,7 @@
 using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
+using Infrastructure.Exceptions;
 
 namespace BusinessLayer.Services
 {
@@ -36,7 +37,7 @@ namespace BusinessLayer.Services
 
             if (foundUser != null)
             {
-                return false;
+                throw new ForbiddenException("Email is already in use");
             }
 
             User newUser = registerUser.ToUser();
@@ -52,7 +53,7 @@ namespace BusinessLayer.Services
             var user = unitOfWork.Users.GetUserByEmail(loginData.Email);
             if (user == null)
             {
-                return null;
+                throw new ForbiddenException("Wrong email or password");
             }
 
             var isPasswordOk = authorizationService.VerifyHashedPassword(user.PasswordHash, loginData.Password);
@@ -63,7 +64,7 @@ namespace BusinessLayer.Services
             }
             else
             {
-                return null;
+                throw new ForbiddenException("Wrong email or password");
             }
         }
 
@@ -82,7 +83,7 @@ namespace BusinessLayer.Services
                 return true;
             }
 
-            return false;
+            throw new ResourceMissingException($"User with id {customer.Id} not found");
         }
 
         public bool UpdateUser(UpdateUserDto updatedUser)
@@ -90,12 +91,12 @@ namespace BusinessLayer.Services
             var foundUser = unitOfWork.Users.GetUserById(updatedUser.Id);
             if (foundUser == null)
             {
-                return false;
+                throw new ResourceMissingException($"User with id {updatedUser.Id} not found");
             }
             var otherUser = unitOfWork.Users.GetUserByEmail(updatedUser.Email);
             if (otherUser != null)
             {
-                return false;
+                throw new ForbiddenException("New email already in use");
             }
             var foundAdress = foundUser.AddressId.HasValue ? unitOfWork.Address.GetById(foundUser.AddressId.Value) : null;
 

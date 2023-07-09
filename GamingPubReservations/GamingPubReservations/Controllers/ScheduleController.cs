@@ -18,14 +18,14 @@ namespace GamingPubReservations.Controllers
         }
 
         [HttpPost("add")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult PostNewSchedule([FromBody] AddScheduleDto addScheduleDto)
         {
             if (_scheduleService.AddSchedule(addScheduleDto))
             {
                 return Ok("Schedule added");
             }
-            return BadRequest("Gaming Pub doesn't exist or it has already a schedule");
+            return BadRequest("Something wrong happened");
         }
 
         [HttpPost("add-same-as-another-schedule/{sourceGamingPubId}/{destinationGamingPubId}")]

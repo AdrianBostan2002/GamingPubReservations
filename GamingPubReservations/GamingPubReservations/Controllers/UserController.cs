@@ -57,7 +57,7 @@ namespace GamingPubReservations.Controllers
             }
             else
             {
-                return BadRequest("Email already in use");
+                return BadRequest("Something wrong happened");
             }
         }
 
@@ -66,10 +66,6 @@ namespace GamingPubReservations.Controllers
         public IActionResult Login([FromBody] LoginDto loginData)
         {
             var jwtToken = _userService.ValidateLogin(loginData);
-            if (jwtToken == null)
-            {
-                return BadRequest("Wrong email or password");
-            }
             return Ok(new { token = jwtToken });
         }
     }

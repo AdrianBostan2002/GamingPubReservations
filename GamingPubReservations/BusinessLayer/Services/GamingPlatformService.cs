@@ -2,6 +2,7 @@
 using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
+using Infrastructure.Exceptions;
 
 namespace BusinessLayer.Services
 {
@@ -20,7 +21,12 @@ namespace BusinessLayer.Services
 
         public GamingPlatform GetPlatform(int id)
         {
-            return unitOfWork.GamingPlatforms.GetById(id);
+            var platform = unitOfWork.GamingPlatforms.GetById(id);
+            if(platform == null)
+            {
+                throw new ResourceMissingException($"Gaming platform with id {id} not found");
+            }
+            return platform;
         }
 
         public bool AddGamingPlatform(AddGamingPlatformDto gamingPlatform)
@@ -28,7 +34,7 @@ namespace BusinessLayer.Services
             var foundPlatform = unitOfWork.GamingPlatforms.GetAll().Where(x => x.Name == gamingPlatform.Name).FirstOrDefault();
             if (foundPlatform != null)
             {
-                return false;
+                throw new ForbiddenException($"'{gamingPlatform.Name}' gaming platform already exists");
             }
             GamingPlatform newGamingPlatform = gamingPlatform.ToGamingPlatform();
             unitOfWork.GamingPlatforms.Insert(newGamingPlatform);
@@ -41,9 +47,9 @@ namespace BusinessLayer.Services
             var foundPlatform = unitOfWork.GamingPlatforms.GetById(platform.Id);
             if (foundPlatform == null)
             {
-                return false;
+                throw new ResourceMissingException($"Gaming platform with id {platform.Id} not found");
             }
-            //also remove links to gaming pubs
+            
             unitOfWork.GamingPlatforms.Remove(foundPlatform);
             unitOfWork.SaveChanges();
             return true;
@@ -54,7 +60,7 @@ namespace BusinessLayer.Services
             var foundPlatform = unitOfWork.GamingPlatforms.GetById(gamingPlatform.Id);
             if (foundPlatform == null)
             {
-                return false;
+                throw new ResourceMissingException($"Gaming platform with id {gamingPlatform.Id} not found");
             }
             foundPlatform.Name = gamingPlatform.Name;
             unitOfWork.SaveChanges();

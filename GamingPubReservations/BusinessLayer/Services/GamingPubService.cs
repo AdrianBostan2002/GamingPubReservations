@@ -2,6 +2,7 @@
 using BusinessLayer.Mapping;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
+using Infrastructure.Exceptions;
 
 namespace BusinessLayer.Services
 {
@@ -17,6 +18,10 @@ namespace BusinessLayer.Services
         public GamingPub GetPub(int id)
         {
             var pub = unitOfWork.GamingPubs.GetById(id);
+            if(pub == null)
+            {
+                throw new ResourceMissingException($"Gaming pub with id {id} not found");
+            }
             pub.Address = unitOfWork.Address.GetById(pub.AddressId);
             return pub;
         }
@@ -37,7 +42,7 @@ namespace BusinessLayer.Services
 
             if (foundGamingPub != null)
             {
-                return false;
+                throw new ForbiddenException($"'{gamingPubDto.Name}' gaming pub already exists");
             }
 
             GamingPub newGamingPub = gamingPubDto.ToGamingPub();
@@ -60,7 +65,7 @@ namespace BusinessLayer.Services
 
             if (foundGamingPub == null)
             {
-                return false;
+                throw new ResourceMissingException($"Gaming pub with id {gamingPubId} not found");
             }
 
             if (!string.IsNullOrEmpty(gamingPubDto.Name))
@@ -89,7 +94,7 @@ namespace BusinessLayer.Services
 
             if (foundGamingPub == null)
             {
-                return false;
+                new ResourceMissingException($"Gaming pub with id {gamingPubId} not found");
             }
 
             if (foundGamingPub.AddressId.HasValue)
